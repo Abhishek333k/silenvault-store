@@ -1,23 +1,21 @@
 /**
- * SilenVault Digital Store - Dynamic Google Sheets Engine
- * Advanced Protocol: Draft Filtering, Cache-Busting, and Multi-Image Hover Slideshows.
+ * SilenVault Digital Store - Dynamic Engine
+ * Features: Google Sheets CMS, GitHub API Folder Scanning, Custom Video Player
  */
 
 const SHEET_ID = '1VvnEPxq42uf_ZJGLmTIpvJXs3J0tF2gYEh49NT47ZBw'; 
-// Added timestamp to bypass Google's 5-minute CDN cache
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&t=${new Date().getTime()}`;
+const REPO_PATH = 'Abhishek333k/silenvault-store'; // Used for dynamic folder scanning
 
+// 1. MAIN FETCH & RENDER LOOP
 async function fetchAndRenderProducts() {
     try {
         const response = await fetch(SHEET_URL);
         const text = await response.text();
-        
-        // Google returns JSONP. Strip the wrapper to parse raw JSON.
         const jsonString = text.substring(47).slice(0, -2);
         const json = JSON.parse(jsonString);
         
-        // Map Columns to Variables (Assuming structure: Status, ID, Title, Desc, Price, Type, Tag, Images, CheckoutURL)
-        const products = json.table.rows.map(row => {
+        const productsRaw = json.table.rows.map(row => {
             return {
                 status: row.c[0] ? row.c[0].v : 'Draft',
                 id: row.c[1] ? row.c[1].v : '',
@@ -26,101 +24,163 @@ async function fetchAndRenderProducts() {
                 price: row.c[4] ? row.c[4].v : 'FREE',
                 type: row.c[5] ? row.c[5].v : 'Free',
                 tag: row.c[6] ? row.c[6].v : 'Asset',
-                imagesRaw: row.c[7] ? row.c[7].v : '',
+                folderPath: row.c[7] ? row.c[7].v : '', // This is now a folder path
                 checkoutUrl: row.c[8] ? row.c[8].v : '#'
             };
-        }).filter(p => p.id !== '' && p.status.toLowerCase() === 'published'); // CRITICAL: Only show Published items
+        }).filter(p => p.id !== '' && p.status.toLowerCase() === 'published');
 
-        // Split into Categories
+        // We must await the folder scanning for all products before rendering
+        const products = await Promise.all(productsRaw.map(async (p) => {
+            const files = await scanDirectory(p.folderPath);
+            p.videos = files.filter(f => f.endsWith('.mp4') || f.endsWith('.webm'));
+            p.images = files.filter(f => f.endsWith('.webp') || f.endsWith('.jpg') || f.endsWith('.png') || f.endsWith('.gif'));
+            return p;
+        }));
+
         const freeProducts = products.filter(p => p.type.toLowerCase() === 'free');
         const premiumProducts = products.filter(p => p.type.toLowerCase() === 'premium');
 
         renderGrid('free-product-grid', freeProducts);
         renderGrid('premium-product-grid', premiumProducts);
 
-        // Bind Multi-Image Hover Logic
         initImageSliders();
+        initCustomVideoPlayers();
 
-        // Initialize Lemon Squeezy popups
         if (window.createLemonSqueezy) {
             window.createLemonSqueezy();
         }
 
     } catch (error) {
         console.error("Database sync failed:", error);
-        document.getElementById('free-product-grid').innerHTML = '<div class="col-span-full text-center text-red-500 mono font-bold">DATABASE SYNC FAILED. VERIFY SHEET PERMISSIONS.</div>';
+        document.getElementById('free-product-grid').innerHTML = '<div class="col-span-full text-center text-red-500 mono font-bold">DATABASE SYNC FAILED.</div>';
     }
 }
 
+// 2. GITHUB API DIRECTORY SCANNER (With Session Cache)
+async function scanDirectory(folderPath) {
+    if (!folderPath || !folderPath.includes('/')) return []; // Not a valid path
+    
+    // Clean trailing slashes
+    folderPath = folderPath.replace(/\/$/, '');
+    
+    // Check Cache to prevent GitHub API Rate Limiting
+    const cacheKey = `sv_dir_${folderPath}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) return JSON.parse(cached);
+
+    try {
+        const apiUrl = `https://api.github.com/repos/${REPO_PATH}/contents/${folderPath}`;
+        const res = await fetch(apiUrl);
+        if (!res.ok) return []; // Folder not found or empty
+        
+        const data = await res.json();
+        // Extract filenames and reconstruct the local path
+        const files = data.filter(item => item.type === 'file').map(item => `${folderPath}/${item.name}`);
+        
+        sessionStorage.setItem(cacheKey, JSON.stringify(files));
+        return files;
+    } catch (e) {
+        console.error(`Failed to scan folder: ${folderPath}`, e);
+        return [];
+    }
+}
+
+// 3. RENDER UI GRID
 function renderGrid(containerId, products) {
     const grid = document.getElementById(containerId);
     if (!grid) return;
 
     if (products.length === 0) {
-        grid.innerHTML = '<div class="col-span-full text-center text-slate-500 mono">NO INVENTORY AVAILABLE IN THIS SECTOR.</div>';
+        grid.innerHTML = '<div class="col-span-full text-center text-slate-500 mono">NO INVENTORY AVAILABLE IN THIS CATEGORY.</div>';
         return;
     }
 
     grid.innerHTML = products.map(product => {
         const isPremium = product.type.toLowerCase() === 'premium';
-        
-        // Multi-Image Logic: Split by Pipe '|' or Comma ','
-        let images = product.imagesRaw.split(/\||,/).map(img => img.trim()).filter(img => img !== '');
-        
-        // Fallback placeholder if no image provided
-        if (images.length === 0) {
-            images = ["data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTExIi8+PHRleHQgeD0iNTAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM1NTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIj5OTyBJTUFHRTwvdGV4dD48L3N2Zz4="];
-        }
+        let mediaHtml = '';
 
-        // Check if string is a Base64 string, external URL, or local file in assets/img/
-        const processImgString = (str) => {
-            if (str.startsWith('data:image') || str.startsWith('http')) return str;
-            return `assets/img/${str}`; // Assumes it's a local filename
-        };
-
-        // Generate HTML for multiple images (stacked for hover effect)
-        const imageTags = images.map((img, index) => 
-            `<img src="${processImgString(img)}" class="slider-img ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'} absolute inset-0 w-full h-full object-cover transition-opacity duration-700">`
-        ).join('');
-
-        // Badge Logic
+        // UI Tagging
         const badgeHtml = isPremium 
-            ? `<div class="absolute top-4 right-4 z-20 bg-blue-500/10 text-blue-400 text-[10px] font-bold px-2 py-1 rounded border border-blue-500/20 uppercase tracking-wider flex items-center gap-1 shadow-[0_0_10px_rgba(59,130,246,0.2)] backdrop-blur-md">
+            ? `<div class="absolute top-4 right-4 z-30 bg-blue-500/10 text-blue-400 text-[10px] font-bold px-2 py-1 rounded border border-blue-500/20 uppercase tracking-wider flex items-center gap-1 backdrop-blur-md">
                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2l5 5-5 11-5-11 5-5z"/></svg> PREMIUM
                </div>`
-            : `<div class="absolute top-4 right-4 z-20 bg-white/10 text-white text-[9px] font-bold px-2 py-1 rounded border border-white/20 uppercase tracking-wider mono backdrop-blur-md">
-                 FREE ACCESS
+            : `<div class="absolute top-4 right-4 z-30 bg-white/10 text-white text-[9px] font-bold px-2 py-1 rounded border border-white/20 uppercase tracking-wider mono backdrop-blur-md">
+                 FREE
                </div>`;
 
-        // UI Tag indicating multiple images
-        const galleryIndicator = images.length > 1 
-            ? `<div class="absolute bottom-4 right-4 z-20 bg-black/60 text-white text-[9px] font-bold px-2 py-1 rounded border border-white/10 uppercase backdrop-blur-md flex items-center gap-1">
-                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                ${images.length}
-               </div>` 
-            : '';
+        // BUILD MEDIA CONTAINER (Video takes priority, else images, else fallback)
+        if (product.videos.length > 0) {
+            // Render Premium Custom Video Player
+            mediaHtml = `
+                <div class="custom-video-wrapper w-full h-full relative group">
+                    <video src="${product.videos[0]}" class="w-full h-full object-cover" playsinline preload="metadata" loop></video>
+                    
+                    <div class="center-play-btn absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors cursor-pointer z-10">
+                        <div class="w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white transition-transform hover:scale-110">
+                            <svg class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6z"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="custom-controls absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-3 pt-8 flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                        <button class="play-pause-btn text-white hover:text-blue-400 transition-colors">
+                            <svg class="w-5 h-5 play-icon" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6z"/></svg>
+                            <svg class="w-5 h-5 pause-icon hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4h3v12H5V4zm7 0h3v12h-3V4z"/></svg>
+                        </button>
+                        
+                        <div class="progress-container flex-1 h-1 bg-white/20 rounded cursor-pointer relative">
+                            <div class="progress-bar absolute top-0 left-0 h-full bg-blue-400 rounded pointer-events-none" style="width: 0%;"></div>
+                        </div>
+
+                        <button class="mute-btn text-white hover:text-blue-400 transition-colors">
+                            <svg class="w-5 h-5 vol-up" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10v4a2 2 0 002 2h2l5 5V3l-5 5H7a2 2 0 00-2 2z"/></svg>
+                            <svg class="w-5 h-5 vol-mute hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd"/><path stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/></svg>
+                        </button>
+                        <button class="fullscreen-btn text-white hover:text-blue-400 transition-colors">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                        </button>
+                    </div>
+                </div>`;
+        } else if (product.images.length > 0) {
+            // Render Image Hover Slider
+            const imageTags = product.images.map((img, index) => 
+                `<img src="${img}" alt="${product.title}" class="slider-img ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'} absolute inset-0 w-full h-full object-cover transition-opacity duration-700">`
+            ).join('');
+            
+            const galleryIndicator = product.images.length > 1 
+                ? `<div class="absolute bottom-4 right-4 z-20 bg-black/60 text-white text-[9px] font-bold px-2 py-1 rounded border border-white/10 uppercase backdrop-blur-md flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg> ${product.images.length}
+                   </div>` : '';
+
+            mediaHtml = `
+                <div class="slider-container w-full h-full relative" data-images="${product.images.length}">
+                    ${imageTags}
+                    ${galleryIndicator}
+                </div>`;
+        } else {
+            // Fallback No Media
+            mediaHtml = `<div class="w-full h-full bg-slate-900 flex items-center justify-center text-slate-600 text-xs mono">NO MEDIA FOUND</div>`;
+        }
 
         return `
-            <div class="premium-glass-card group flex flex-col h-full bg-[rgba(255,255,255,0.02)] backdrop-blur-[24px] border border-white/5 rounded-2xl overflow-hidden transition-all duration-400 hover:border-white/20 hover:-translate-y-2 hover:shadow-[0_40px_80px_rgba(0,0,0,0.8)]">
-                <div class="card-media relative w-full h-56 bg-black border-b border-white/5 flex-shrink-0 slider-container" data-images="${images.length}">
-                    ${imageTags}
+            <div class="premium-glass-card group flex flex-col h-full bg-[rgba(255,255,255,0.02)] backdrop-blur-[24px] border border-white/5 rounded-2xl overflow-hidden transition-all duration-400 hover:border-white/20 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+                <div class="card-media relative w-full h-56 bg-black border-b border-white/5 flex-shrink-0">
+                    ${mediaHtml}
                     ${badgeHtml}
-                    ${galleryIndicator}
-                    <div class="absolute top-4 left-4 z-20 bg-black/60 text-slate-200 text-[9px] font-bold px-2 py-1 rounded border border-white/10 uppercase tracking-widest backdrop-blur-md">
+                    <div class="absolute top-4 left-4 z-30 bg-black/60 text-slate-200 text-[9px] font-bold px-2 py-1 rounded border border-white/10 uppercase tracking-widest backdrop-blur-md pointer-events-none">
                         ${product.tag}
                     </div>
                 </div>
-                <div class="p-8 flex flex-col flex-1">
-                    <h2 class="text-2xl font-bold text-white mb-3 tracking-tight">${product.title}</h2>
-                    <p class="text-sm text-slate-400 mb-8 flex-1 font-light leading-relaxed">
+                <div class="p-6 flex flex-col flex-1">
+                    <h2 class="text-xl font-bold text-white mb-2 tracking-tight">${product.title}</h2>
+                    <p class="text-sm text-slate-400 mb-6 flex-1 font-light leading-relaxed">
                         ${product.description}
                     </p>
-                    <div class="flex items-center justify-between border-t border-white/10 pt-6 mt-auto">
+                    <div class="flex items-center justify-between border-t border-white/10 pt-5 mt-auto">
                         <div class="flex flex-col">
-                            <span class="text-xs text-slate-500 mono uppercase tracking-widest mb-1">Price</span>
-                            <span class="text-2xl font-bold ${isPremium ? 'text-blue-400' : 'text-white'} mono">${product.price}</span>
+                            <span class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Price</span>
+                            <span class="text-xl font-bold ${isPremium ? 'text-blue-400' : 'text-white'} mono">${product.price}</span>
                         </div>
-                        <a href="${product.checkoutUrl}" class="lemonsqueezy-button btn-action px-8 py-3 bg-gradient-to-br from-white to-slate-300 text-black font-extrabold rounded-lg text-sm uppercase tracking-wide hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                        <a href="${product.checkoutUrl}" class="lemonsqueezy-button bg-white text-black font-bold rounded px-6 py-2 text-sm transition-transform hover:scale-105 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)]">
                             ${isPremium ? 'Buy Now' : 'Download'}
                         </a>
                     </div>
@@ -130,13 +190,11 @@ function renderGrid(containerId, products) {
     }).join('');
 }
 
-// Logic for hovering over a card to cycle through multiple images
+// 4. LOGIC: MULTI-IMAGE HOVER
 function initImageSliders() {
-    const containers = document.querySelectorAll('.slider-container');
-    
-    containers.forEach(container => {
+    document.querySelectorAll('.slider-container').forEach(container => {
         const imageCount = parseInt(container.getAttribute('data-images'));
-        if (imageCount <= 1) return; // Skip if only 1 image
+        if (imageCount <= 1) return; 
 
         const images = container.querySelectorAll('.slider-img');
         let currentIndex = 0;
@@ -146,22 +204,89 @@ function initImageSliders() {
             interval = setInterval(() => {
                 images[currentIndex].classList.remove('opacity-100', 'z-10');
                 images[currentIndex].classList.add('opacity-0', 'z-0');
-                
                 currentIndex = (currentIndex + 1) % imageCount;
-                
                 images[currentIndex].classList.remove('opacity-0', 'z-0');
                 images[currentIndex].classList.add('opacity-100', 'z-10');
-            }, 1500); // Changes image every 1.5 seconds on hover
+            }, 1500); 
         });
 
         container.addEventListener('mouseleave', () => {
             clearInterval(interval);
-            // Reset to first image
             images[currentIndex].classList.remove('opacity-100', 'z-10');
             images[currentIndex].classList.add('opacity-0', 'z-0');
             currentIndex = 0;
             images[0].classList.remove('opacity-0', 'z-0');
             images[0].classList.add('opacity-100', 'z-10');
+        });
+    });
+}
+
+// 5. LOGIC: CUSTOM VIDEO PLAYER
+function initCustomVideoPlayers() {
+    document.querySelectorAll('.custom-video-wrapper').forEach(wrapper => {
+        const video = wrapper.querySelector('video');
+        const centerPlayBtn = wrapper.querySelector('.center-play-btn');
+        const playPauseBtn = wrapper.querySelector('.play-pause-btn');
+        const playIcon = wrapper.querySelector('.play-icon');
+        const pauseIcon = wrapper.querySelector('.pause-icon');
+        const muteBtn = wrapper.querySelector('.mute-btn');
+        const volUpIcon = wrapper.querySelector('.vol-up');
+        const volMuteIcon = wrapper.querySelector('.vol-mute');
+        const progressBar = wrapper.querySelector('.progress-bar');
+        const progressContainer = wrapper.querySelector('.progress-container');
+        const fullscreenBtn = wrapper.querySelector('.fullscreen-btn');
+
+        // Play/Pause Logic
+        const togglePlay = () => {
+            if (video.paused) {
+                video.play();
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+                centerPlayBtn.classList.add('opacity-0', 'pointer-events-none');
+            } else {
+                video.pause();
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+                centerPlayBtn.classList.remove('opacity-0', 'pointer-events-none');
+            }
+        };
+
+        centerPlayBtn.addEventListener('click', togglePlay);
+        playPauseBtn.addEventListener('click', togglePlay);
+        video.addEventListener('click', togglePlay);
+
+        // Mute/Unmute Logic
+        muteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            video.muted = !video.muted;
+            if (video.muted) {
+                volUpIcon.classList.add('hidden');
+                volMuteIcon.classList.remove('hidden');
+            } else {
+                volUpIcon.classList.remove('hidden');
+                volMuteIcon.classList.add('hidden');
+            }
+        });
+
+        // Progress Bar Update
+        video.addEventListener('timeupdate', () => {
+            const percent = (video.currentTime / video.duration) * 100;
+            progressBar.style.width = `${percent}%`;
+        });
+
+        // Click to seek
+        progressContainer.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const rect = progressContainer.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            video.currentTime = pos * video.duration;
+        });
+
+        // Fullscreen
+        fullscreenBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (video.requestFullscreen) video.requestFullscreen();
+            else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
         });
     });
 }
