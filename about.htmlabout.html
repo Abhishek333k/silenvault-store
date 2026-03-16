@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About SilenVault | System Architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/layout.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    
+    <style>
+        /* HERO IMAGE ANIMATION */
+        .hero-image-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .hero-image-wrapper::before {
+            content: '';
+            position: absolute;
+            width: 250px; height: 250px;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: pulse-glow 4s infinite alternate ease-in-out;
+        }
+        .hero-float {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 320px;
+            animation: floating 4s ease-in-out infinite;
+            filter: drop-shadow(0px 20px 30px rgba(0,0,0,0.8));
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes pulse-glow {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-black text-[#00f0ff] min-h-screen flex flex-col font-mono relative">
+    
+    <div class="fixed inset-0 grid-bg pointer-events-none opacity-20"></div>
+
+    <sv-header base-path="."></sv-header>
+
+    <main class="flex-1 max-w-6xl mx-auto w-full px-6 py-20 relative z-10">
+        
+        <div class="grid md:grid-cols-2 gap-12 items-center mb-20 border-b border-[#00f0ff]/20 pb-16">
+            
+            <div>
+                <div class="inline-block border border-[#00f0ff] px-3 py-1 text-xs font-bold mb-6 bg-[#00f0ff]/10">
+                    [ SYSTEM_ABOUT ]
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl font-black text-white mb-6 uppercase tracking-tighter drop-shadow-[0_0_10px_rgba(0,240,255,0.5)]">
+                    SilenVault <span class="text-[#00f0ff]">Architecture</span>
+                </h1>
+                
+                <p class="text-slate-400 leading-relaxed text-sm md:text-base mb-6">
+                    SilenVault is an independent, client-side toolkit designed for privacy, speed, and absolute control. Unlike modern cloud tools that harvest telemetry, everything executed within SilenVault remains completely local to your hardware.
+                </p>
+                <div class="flex gap-4">
+                    <a href="https://github.com/Abhishek333k/silenvault" target="_blank" class="flex items-center justify-center gap-2 border border-[#00f0ff] text-[#00f0ff] px-6 py-3 text-sm font-bold uppercase hover:bg-[#00f0ff] hover:text-black transition-all shadow-[0_0_15px_rgba(0,240,255,0.2)]">
+                        [ VIEW SOURCE ]
+                    </a>
+                </div>
+            </div>
+            
+            <div class="hero-image-wrapper hidden md:flex">
+                <img src="assets/img/hero.png" alt="Developer Avatar" class="hero-float object-contain">
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-16">
+            <div class="border border-[#00f0ff]/30 bg-black/50 p-6 backdrop-blur-sm hover:border-[#00f0ff] transition-colors relative group">
+                <div class="absolute top-0 right-0 p-2 text-[10px] text-[#00f0ff]/50">01</div>
+                <h2 class="text-xl font-bold text-white mb-4 uppercase">Zero Telemetry</h2>
+                <p class="text-slate-400 text-sm leading-relaxed">We do not track, store, or log your inputs. Your IP address is not logged in a database. Your workflow is yours alone.</p>
+            </div>
+
+            <div class="border border-[#ff003c]/30 bg-black/50 p-6 backdrop-blur-sm hover:border-[#ff003c] transition-colors relative group">
+                <div class="absolute top-0 right-0 p-2 text-[10px] text-[#ff003c]/50">02</div>
+                <h2 class="text-xl font-bold text-white mb-4 uppercase text-[#ff003c]">Client-Side Execution</h2>
+                <p class="text-slate-400 text-sm leading-relaxed">Tools like our Document Forgers, EXIF scrubbers, and Hash Generators utilize JavaScript to run entirely within your local browser sandbox.</p>
+            </div>
+            
+            <div class="border border-[#fce100]/30 bg-black/50 p-6 backdrop-blur-sm hover:border-[#fce100] transition-colors relative group md:col-span-2">
+                <div class="absolute top-0 right-0 p-2 text-[10px] text-[#fce100]/50">03</div>
+                <h2 class="text-xl font-bold text-white mb-4 uppercase text-[#fce100]">The Open Store</h2>
+                <p class="text-slate-400 text-sm leading-relaxed max-w-3xl">While the core SilenVault tools remain 100% free and open-source, we operate a dedicated Digital Store providing premium assets and scripts to fund the continuous hosting and development of this infrastructure.</p>
+                <a href="https://store.silenvault.com" class="inline-block mt-4 text-[#fce100] text-xs font-bold hover:underline">>> ACCESS STORE</a>
+            </div>
+        </div>
+
+    </main>
+
+    <sv-footer base-path="."></sv-footer>
+
+</body>
+</html>
