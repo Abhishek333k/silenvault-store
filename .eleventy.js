@@ -2,7 +2,11 @@ module.exports = function(eleventyConfig) {
     // Tell Eleventy to copy these exact folders/files to the final build
     eleventyConfig.addPassthroughCopy("assets");
     eleventyConfig.addPassthroughCopy("robots.txt");
-    eleventyConfig.addPassthroughCopy("sitemap.xml");
+
+    // Custom Date Filter for the Sitemap
+    eleventyConfig.addFilter("date", function() {
+        return new Date().toISOString().split('T')[0]; // Returns YYYY-MM-DD
+    });
 
     return {
         dir: {
@@ -10,7 +14,7 @@ module.exports = function(eleventyConfig) {
             output: "_site",
             data: "_data"
         },
-        templateFormats: ["html", "njk"],
+        templateFormats: ["html", "njk", "md"],
         htmlTemplateEngine: "njk",
     };
 };

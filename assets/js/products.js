@@ -176,7 +176,7 @@ function renderGrid(containerId, products) {
         }
 
         return `
-            <div class="premium-glass-card group flex flex-col h-full bg-[rgba(255,255,255,0.02)] backdrop-blur-[24px] border border-white/5 rounded-2xl overflow-hidden transition-all duration-400 hover:border-white/20 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+            <div onclick="window.location.href='/item/${product.id}/'" class="cursor-pointer premium-glass-card group flex flex-col h-full bg-[rgba(255,255,255,0.02)] backdrop-blur-[24px] border border-white/5 rounded-2xl overflow-hidden transition-all duration-400 hover:border-white/20 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
                 <div class="card-media relative w-full h-56 bg-black border-b border-white/5 flex-shrink-0">
                     ${mediaHtml}
                     ${badgeHtml}
@@ -194,7 +194,7 @@ function renderGrid(containerId, products) {
                             <span class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Price</span>
                             <span class="text-xl font-bold ${isPremium ? 'text-blue-400' : 'text-white'} mono">${product.price}</span>
                         </div>
-                        <a href="${product.checkoutUrl}" class="lemonsqueezy-button bg-white text-black font-bold rounded px-6 py-2 text-sm transition-transform hover:scale-105 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+                        <a href="${product.checkoutUrl}" onclick="event.stopPropagation();" class="lemonsqueezy-button bg-white text-black font-bold rounded px-6 py-2 text-sm transition-transform hover:scale-105 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] relative z-40">
                             ${isPremium ? 'Buy Now' : 'Download'}
                         </a>
                     </div>

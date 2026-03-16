@@ -1,0 +1,24 @@
+---
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://store.silenvault.com/</loc>
+        <lastmod>{{ "now" | date("Y-MM-DD") }}</lastmod>
+    </url>
+    <url>
+        <loc>https://store.silenvault.com/about/</loc>
+    </url>
+    <url>
+        <loc>https://store.silenvault.com/request/</loc>
+    </url>
+    
+    {% for product in products %}
+    <url>
+        <loc>https://store.silenvault.com/item/{{ product.ID }}/</loc>
+        <lastmod>{{ "now" | date("Y-MM-DD") }}</lastmod>
+    </url>
+    {% endfor %}
+</urlset>
