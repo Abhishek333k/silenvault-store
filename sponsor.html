@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilenVault | Sponsor the Project</title>
+    <meta name="description" content="Support SilenVault. Choose a method below to help fund server costs and ongoing development.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <script src="assets/js/layout.js" defer></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #f8fafc; margin: 0; min-height: 100vh; overflow-x: hidden; }
+        .mono { font-family: 'Fira Code', monospace; }
+        
+        .cinematic-bg { position: fixed; inset: 0; z-index: -2; background-color: #02040a; overflow: hidden; }
+        .cinematic-vignette {
+            position: absolute; inset: 0; z-index: -1; pointer-events: none;
+            background: radial-gradient(circle at center, transparent 0%, #000000 100%),
+                        linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 80%, #000000 100%);
+        }
+
+        .premium-glass-panel {
+            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1.25rem;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02);
+            display: flex; flex-direction: column;
+        }
+
+        .copy-box {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.75rem 1rem; border-radius: 0.5rem; margin-top: 0.5rem;
+        }
+        .copy-box input {
+            background: transparent; border: none; color: #94a3b8; font-size: 0.8rem;
+            width: 100%; outline: none; cursor: default;
+        }
+        .btn-copy {
+            background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem; font-size: 0.75rem; cursor: pointer; transition: 0.2s;
+        }
+        .btn-copy:hover { background: #38bdf8; color: #000; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%); color: #000;
+            border-radius: 0.5rem; transition: all 0.3s ease; font-weight: 700;
+            padding: 0.75rem 1.5rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            width: 100%;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255,255,255,0.1); background: #ffffff; }
+    </style>
+</head>
+<body>
+
+    <div class="cinematic-bg">
+        <canvas id="neural-canvas"></canvas>
+        <div class="cinematic-vignette"></div>
+    </div>
+
+    <sv-header base-path="."></sv-header>
+
+    <main class="relative z-10 w-full max-w-5xl mx-auto px-4 pt-32 pb-24 text-center">
+        <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight drop-shadow-2xl mb-4">
+            Support SilenVault
+        </h1>
+        <p class="text-slate-400 font-light max-w-2xl mx-auto mb-12">
+            SilenVault operates as an independent platform. Your support funds server hosting, API usage, and ongoing tool development. Choose a sponsorship method below.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+            
+            <div class="premium-glass-panel p-8">
+                <div class="flex items-center gap-3 mb-4 border-b border-white/10 pb-4">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    <h2 class="text-lg font-bold text-white">GitHub Sponsors</h2>
+                </div>
+                <p class="text-sm text-slate-400 mb-6 flex-1">The official and most direct way to support the developer. Includes automated monthly tiers or one-time contributions.</p>
+                <a href="https://github.com/sponsors/abhishek333k" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                    Sponsor on GitHub
+                </a>
+            </div>
+
+            <div class="premium-glass-panel p-8">
+                <div class="flex items-center gap-3 mb-4 border-b border-white/10 pb-4">
+                    <svg class="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" /></svg>
+                    <h2 class="text-lg font-bold text-white">UPI / QR Scan</h2>
+                </div>
+                <div class="flex-1 flex flex-col items-center justify-center">
+                    <div class="w-32 h-32 bg-white p-2 rounded-lg mb-4">
+                        <img src="assets/img/upi_qr.png" alt="UPI QR Code" class="w-full h-full object-contain" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWVlIi8+PHRleHQgeD0iNTAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJjZW50cmFsIj5RUiBNSVNTSU5HPC90ZXh0Pjwvc3ZnPg=='">
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">UPI ID</label>
+                    <div class="copy-box">
+                        <input type="text" value="your-upi-id@bank" readonly id="upi-id">
+                        <button class="btn-copy mono" onclick="copyToClipboard('upi-id', this)">COPY</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="premium-glass-panel p-8">
+                <div class="flex items-center gap-3 mb-4 border-b border-white/10 pb-4">
+                    <svg class="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                    <h2 class="text-lg font-bold text-white">Cryptocurrency</h2>
+                </div>
+                <p class="text-sm text-slate-400 mb-4 font-light">Direct transfers via decentralized networks. Ensure you are sending via the correct network protocol.</p>
+                
+                <div class="flex-1 space-y-4">
+                    <div>
+                        <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider flex justify-between">
+                            <span>Bitcoin (BTC)</span>
+                            <span>BTC Network</span>
+                        </label>
+                        <div class="copy-box">
+                            <input type="text" value="bc1q-your-btc-address-here" readonly id="btc-id">
+                            <button class="btn-copy mono" onclick="copyToClipboard('btc-id', this)">COPY</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider flex justify-between">
+                            <span>Ethereum / USDT</span>
+                            <span>ERC20 Network</span>
+                        </label>
+                        <div class="copy-box">
+                            <input type="text" value="0x-your-eth-address-here" readonly id="eth-id">
+                            <button class="btn-copy mono" onclick="copyToClipboard('eth-id', this)">COPY</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <sv-footer base-path="."></sv-footer>
+
+    <script>
+        // Copy to clipboard utility
+        function copyToClipboard(inputId, btnElement) {
+            const input = document.getElementById(inputId);
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile devices
+            navigator.clipboard.writeText(input.value).then(() => {
+                const originalText = btnElement.innerText;
+                btnElement.innerText = "COPIED";
+                btnElement.style.color = "#000";
+                btnElement.style.background = "#38bdf8";
+                setTimeout(() => {
+                    btnElement.innerText = originalText;
+                    btnElement.style.color = "#fff";
+                    btnElement.style.background = "rgba(255,255,255,0.1)";
+                }, 2000);
+            });
+        }
+
+        // Neural Canvas Script
+        const canvas = document.getElementById('neural-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [], mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+        window.addEventListener('touchmove', (e) => { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; });
+        window.addEventListener('touchend', () => { mouse.x = null; mouse.y = null; });
+
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; initParticles(); }
+        window.addEventListener('resize', resize);
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 1.5 + 0.5; 
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > height) this.vy = -this.vy;
+            }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            let numberOfParticles = (width * height) / 14000; 
+            for (let i = 0; i < numberOfParticles; i++) { particles.push(new Particle()); }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update(); particles[i].draw();
+                for (let j = i; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x; let dy = particles[i].y - particles[j].y; let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        ctx.beginPath(); ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - distance/1000})`; ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                    }
+                }
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = particles[i].x - mouse.x; let dy = particles[i].y - mouse.y; let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        ctx.beginPath(); ctx.strokeStyle = `rgba(0, 240, 255, ${0.3 - distance/500})`; ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        resize(); animate();
+    </script>
+</body>
+</html>
