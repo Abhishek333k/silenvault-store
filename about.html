@@ -3,18 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About SilenVault</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="assets/js/layout.js" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <title>SilenVault | About the Store</title>
+    <meta name="description" content="Learn about SilenVault, an independent developer building premium digital tools and assets.">
     
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <script src="assets/js/layout.js" defer></script>
+
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #020617; color: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #f8fafc; margin: 0; min-height: 100vh; overflow-x: hidden; }
+        .mono { font-family: 'Fira Code', monospace; }
         
-        /* Soft Modern Background */
-        .bg-glow {
-            position: fixed; inset: 0; z-index: -1; pointer-events: none;
-            background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.1) 0%, transparent 60%);
+        /* Interactive Neural Web Background */
+        .cinematic-bg { position: fixed; inset: 0; z-index: -2; background-color: #02040a; overflow: hidden; }
+        .cinematic-vignette {
+            position: absolute; inset: 0; z-index: -1; pointer-events: none;
+            background: radial-gradient(circle at center, transparent 0%, #000000 100%),
+                        linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 80%, #000000 100%);
         }
 
         /* 3D Hexagon Pop-Out Animation */
@@ -22,29 +27,28 @@
             position: relative; width: 300px; height: 420px; margin: 0 auto;
             display: flex; justify-content: center; align-items: flex-end;
         }
-
         .hex-shadow-wrapper {
             position: absolute; bottom: 0; width: 300px; height: 340px;
-            filter: drop-shadow(0 10px 20px rgba(56, 189, 248, 0.3));
+            filter: drop-shadow(0 10px 20px rgba(56, 189, 248, 0.2));
             animation: float-anim 6s ease-in-out infinite;
         }
-
+        
+        /* Store-Branded Hexagon Frame (Sleek Blue/Emerald Gradient) */
         .hex-glow {
             width: 100%; height: 100%;
             background: linear-gradient(135deg, #38bdf8 0%, #34d399 100%);
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
         }
-
         .hex-inner {
             position: absolute; bottom: 3px; left: 3px; right: 3px; top: 3px;
-            background: #0f172a; /* Slate 900 */
+            background: #02040a; /* Matches neural background base */
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
         }
-
+        
+        /* The Image mathematically clips at the bottom but leaves the top completely open to pop out */
         .hero-img {
             position: absolute; bottom: 3px; left: 3px; width: 294px; height: 420px;
             object-fit: cover; object-position: bottom center;
-            /* Mathematically clips bottom to fit hexagon, leaves top completely unclipped for head to pop out */
             clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 83.5px), 50% 100%, 0% calc(100% - 83.5px));
             z-index: 10; animation: float-anim 6s ease-in-out infinite;
         }
@@ -55,43 +59,43 @@
             100% { transform: translateY(0px); }
         }
 
-        /* Clean SaaS Cards */
-        .clean-card {
-            background: #0f172a; border: 1px solid #1e293b; border-radius: 1rem; padding: 2rem;
-            transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        /* Sleek Frosted Glass Containers */
+        .premium-glass-panel {
+            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1.25rem;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02);
+            display: flex; flex-direction: column; transition: transform 0.4s ease, border-color 0.4s ease;
         }
-        .clean-card:hover { border-color: #38bdf8; transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
-        
-        .btn-primary {
-            background: #38bdf8; color: #0f172a; padding: 0.75rem 1.5rem; border-radius: 0.5rem;
-            font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; transition: 0.2s;
-        }
-        .btn-primary:hover { background: #7dd3fc; }
+        .premium-glass-panel:hover { border-color: rgba(255, 255, 255, 0.15); transform: translateY(-5px); }
+
     </style>
 </head>
-<body class="min-h-screen flex flex-col relative">
-    
-    <div class="bg-glow"></div>
+<body>
+
+    <div class="cinematic-bg">
+        <canvas id="neural-canvas"></canvas>
+        <div class="cinematic-vignette"></div>
+    </div>
+
     <sv-header base-path="."></sv-header>
 
-    <main class="flex-1 max-w-6xl mx-auto w-full px-6 py-32 relative z-10">
+    <main class="relative z-10 w-full max-w-6xl mx-auto px-4 pt-32 pb-24">
         
-        <div class="grid md:grid-cols-2 gap-16 items-center mb-24">
-            <div>
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight">
-                    About SilenVault
-                </h1>
-                <p class="text-slate-400 leading-relaxed text-lg mb-8">
-                    SilenVault is an independent toolkit designed for privacy, speed, and absolute control. Unlike cloud platforms that harvest data, everything executed within SilenVault remains completely local to your device.
-                </p>
-                <div class="flex gap-4">
-                    <a href="https://github.com/Abhishek333k/silenvault" target="_blank" class="btn-primary">
-                        View Source on GitHub
-                    </a>
+        <div class="grid md:grid-cols-2 gap-12 items-center mb-20">
+            <div class="text-center md:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 border border-white/10 bg-white/5 backdrop-blur-md text-slate-300 text-[10px] font-bold mono tracking-widest rounded-full mb-6 uppercase">
+                    About The Developer
                 </div>
+                
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter drop-shadow-2xl mb-6">
+                    Independent <span class="text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-emerald-400">Engineering</span>
+                </h1>
+                <p class="text-slate-400 font-light max-w-lg mx-auto md:mx-0 leading-relaxed text-lg">
+                    SilenVault is an independent initiative dedicated to building premium digital tools, highly-optimized scripts, and visually stunning assets for developers and power users.
+                </p>
             </div>
             
-            <div class="hidden md:flex justify-center">
+            <div class="flex justify-center transform scale-90 md:scale-100 origin-center mb-10 md:mb-0">
                 <div class="hero-wrapper">
                     <div class="hex-shadow-wrapper">
                         <div class="hex-glow">
@@ -103,35 +107,96 @@
             </div>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-8 mb-16">
-            <div class="clean-card">
-                <div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center mb-6 border border-blue-500/20">
-                    <svg class="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        <div class="grid md:grid-cols-3 gap-6 text-left">
+            
+            <div class="premium-glass-panel p-8">
+                <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-6 border border-blue-500/20 text-blue-400">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
                 </div>
-                <h2 class="text-xl font-bold text-white mb-3">Privacy First</h2>
-                <p class="text-slate-400 leading-relaxed">We do not track, store, or log your inputs. Your workflow is entirely your own.</p>
+                <h3 class="text-xl font-bold text-white mb-3 tracking-tight">Purpose Built</h3>
+                <p class="text-sm text-slate-400 leading-relaxed font-light">Every software tool and script is engineered from the ground up to solve real workflow bottlenecks without bloated corporate tracking.</p>
             </div>
 
-            <div class="clean-card">
-                <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/20">
-                    <svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <div class="premium-glass-panel p-8">
+                <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/20 text-emerald-400">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                 </div>
-                <h2 class="text-xl font-bold text-white mb-3">Client-Side Processing</h2>
-                <p class="text-slate-400 leading-relaxed">Tools like our Document Forgers, EXIF scrubbers, and Generators utilize JavaScript to run entirely within your local browser sandbox.</p>
+                <h3 class="text-xl font-bold text-white mb-3 tracking-tight">Secure Commerce</h3>
+                <p class="text-sm text-slate-400 leading-relaxed font-light">We leverage Lemon Squeezy as our Merchant of Record, ensuring that your payment data is protected by industry-leading 256-bit encryption.</p>
             </div>
-            
-            <div class="clean-card md:col-span-2 flex flex-col md:flex-row items-center justify-between gap-8">
-                <div>
-                    <h2 class="text-xl font-bold text-white mb-3">The Digital Store</h2>
-                    <p class="text-slate-400 leading-relaxed max-w-2xl">While the core SilenVault tools remain 100% free and open-source, we operate a dedicated store providing premium wallpapers and software to fund ongoing development.</p>
+
+            <div class="premium-glass-panel p-8">
+                <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center mb-6 border border-purple-500/20 text-purple-400">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 </div>
-                <a href="https://store.silenvault.com" class="btn-primary shrink-0 whitespace-nowrap">
-                    Visit the Store
-                </a>
+                <h3 class="text-xl font-bold text-white mb-3 tracking-tight">Funding Independence</h3>
+                <p class="text-sm text-slate-400 leading-relaxed font-light">By purchasing from the Store, you are directly funding the server costs and development hours that keep the main SilenVault toolkit 100% free.</p>
             </div>
+
         </div>
     </main>
 
     <sv-footer base-path="."></sv-footer>
+
+    <script>
+        // Interactive Neural Canvas Protocol
+        const canvas = document.getElementById('neural-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [], mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+        window.addEventListener('touchmove', (e) => { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; });
+        window.addEventListener('touchend', () => { mouse.x = null; mouse.y = null; });
+
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; initParticles(); }
+        window.addEventListener('resize', resize);
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 1.5 + 0.5; 
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > height) this.vy = -this.vy;
+            }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            let numberOfParticles = (width * height) / 14000; 
+            for (let i = 0; i < numberOfParticles; i++) { particles.push(new Particle()); }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update(); particles[i].draw();
+                for (let j = i; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x; let dy = particles[i].y - particles[j].y; let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        ctx.beginPath(); ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - distance/1000})`; ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                    }
+                }
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = particles[i].x - mouse.x; let dy = particles[i].y - mouse.y; let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        ctx.beginPath(); ctx.strokeStyle = `rgba(0, 240, 255, ${0.3 - distance/500})`; ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        resize(); animate();
+    </script>
 </body>
 </html>
