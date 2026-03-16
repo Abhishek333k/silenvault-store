@@ -1,12 +1,13 @@
 /**
  * SilenVault Digital Store - Dynamic Google Sheets Engine
  * Fetches product data directly from the live Google Sheet.
+ https://docs.google.com/spreadsheets/d/1VvnEPxq42uf_ZJGLmTIpvJXs3J0tF2gYEh49NT47ZBw/edit?usp=sharing
  */
 
 // ==========================================
 // 1. PASTE YOUR GOOGLE SHEET ID HERE
 // ==========================================
-const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID_HERE'; 
+const SHEET_ID = '1VvnEPxq42uf_ZJGLmTIpvJXs3J0tF2gYEh49NT47ZBw'; 
 
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
