@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilenVault | Legal Directives</title>
+    <meta name="description" content="Terms of Service, Privacy Policy, and Refund Directives for the SilenVault Digital Armory.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="assets/js/layout.js" defer></script>
+
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #000000; 
+            color: #f8fafc; 
+            margin: 0; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+        }
+        .mono { font-family: 'Fira Code', monospace; }
+        
+        /* Interactive Neural Web Background Container */
+        .cinematic-bg {
+            position: fixed; inset: 0; z-index: -2;
+            background-color: #02040a;
+            overflow: hidden;
+        }
+        
+        .cinematic-vignette {
+            position: absolute; inset: 0; z-index: -1; pointer-events: none;
+            background: radial-gradient(circle at center, transparent 0%, #000000 100%),
+                        linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 80%, #000000 100%);
+        }
+
+        /* Sleek Frosted Glass Container */
+        .premium-glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.25rem;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02);
+        }
+
+        /* Prose Styling for Legal Text */
+        .legal-content h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .legal-content p {
+            color: #94a3b8;
+            font-weight: 300;
+            line-height: 1.75;
+            margin-bottom: 1.25rem;
+        }
+        .legal-content ul {
+            color: #94a3b8;
+            font-weight: 300;
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+        .legal-content li { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+
+    <div class="cinematic-bg">
+        <canvas id="neural-canvas"></canvas>
+        <div class="cinematic-vignette"></div>
+    </div>
+
+    <sv-header base-path="."></sv-header>
+
+    <main class="relative z-10 w-full max-w-4xl mx-auto px-4 pt-32 pb-8 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 border border-white/10 bg-white/5 backdrop-blur-md text-slate-300 text-[10px] font-bold mono tracking-widest rounded-full mb-6 uppercase">
+            System Protocol
+        </div>
+        <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter drop-shadow-2xl mb-4">
+            Legal <span class="text-transparent bg-clip-text bg-gradient-to-br from-slate-200 to-slate-600">Directives</span>
+        </h1>
+        <p class="text-slate-400 font-light">Last Updated: March 2026</p>
+    </main>
+
+    <section class="relative z-10 w-full pb-32">
+        <div class="max-w-4xl mx-auto px-4">
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <a href="#terms" class="px-6 py-2 rounded-full border border-white/10 bg-white/5 text-sm text-slate-300 hover:text-white hover:bg-white/10 transition-colors mono">01. Terms of Service</a>
+                <a href="#privacy" class="px-6 py-2 rounded-full border border-white/10 bg-white/5 text-sm text-slate-300 hover:text-white hover:bg-white/10 transition-colors mono">02. Privacy Policy</a>
+                <a href="#refunds" class="px-6 py-2 rounded-full border border-white/10 bg-white/5 text-sm text-slate-300 hover:text-white hover:bg-white/10 transition-colors mono">03. Refund Policy</a>
+            </div>
+
+            <div class="premium-glass-panel p-8 md:p-12 legal-content">
+                
+                <h2 id="terms" class="!mt-0">01. Terms of Service</h2>
+                <p>Welcome to SilenVault. By accessing or purchasing from our Digital Armory (store.silenvault.com), you agree to be bound by these Terms of Service. All digital assets, including live wallpapers, automation scripts, and software tools, are the exclusive intellectual property of SilenVault.</p>
+                <p><strong>License to Use:</strong> Upon purchase, you are granted a non-exclusive, non-transferable license to use the downloaded assets for personal or professional use. You may not distribute, resell, or publicly host the raw source files (.mp4, .bat, etc.) without explicit authorization.</p>
+                <p><strong>Liability:</strong> Software and automation scripts provided by SilenVault are executed at your own risk. While we rigorously test our tools, SilenVault assumes no liability for system errors, data loss, or configuration issues resulting from the deployment of our scripts.</p>
+
+                <h2 id="privacy">02. Privacy Policy</h2>
+                <p>Your privacy is absolute. SilenVault does not inherently track, log, or sell your personal data. We utilize third-party infrastructure to process transactions securely.</p>
+                <ul>
+                    <li><strong>Payment Processing:</strong> All financial transactions are handled securely by our Merchant of Record, <strong>Lemon Squeezy</strong>. SilenVault never sees, stores, or processes your credit card information.</li>
+                    <li><strong>Analytics:</strong> We use standard, anonymized analytics (Google Analytics) to monitor network traffic and optimize the armory's performance.</li>
+                    <li><strong>Email Communications:</strong> If you purchase a product, your email is used strictly for digital fulfillment (delivering your download link) and critical updates regarding your purchased assets.</li>
+                </ul>
+
+                <h2 id="refunds">03. Refund Policy</h2>
+                <p>Due to the immediate, non-returnable nature of digital downloads, <strong>all sales are generally final</strong> once the file has been accessed or downloaded.</p>
+                <p>However, if you experience a critical technical failure, a corrupted file, or an inability to access your purchase, please contact our support protocol immediately. We will review refund requests on a case-by-case basis to ensure absolute client satisfaction.</p>
+                
+                <div class="mt-12 p-6 border border-white/10 bg-black/50 rounded-xl text-center">
+                    <p class="mb-0 text-sm">For legal inquiries or support protocols, contact: <br><a href="mailto:support@silenvault.com" class="text-emerald-500 hover:text-emerald-400 font-bold mt-2 inline-block">support@silenvault.com</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <sv-footer base-path="."></sv-footer>
+
+    <script>
+        const canvas = document.getElementById('neural-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+        window.addEventListener('touchmove', (e) => { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; });
+        window.addEventListener('touchend', () => { mouse.x = null; mouse.y = null; });
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initParticles();
+        }
+        window.addEventListener('resize', resize);
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 1.5 + 0.5; 
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > height) this.vy = -this.vy;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            let numberOfParticles = (width * height) / 14000; 
+            for (let i = 0; i < numberOfParticles; i++) { particles.push(new Particle()); }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                for (let j = i; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - distance/1000})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = particles[i].x - mouse.x;
+                    let dy = particles[i].y - mouse.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${0.3 - distance/500})`; 
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        resize(); animate();
+    </script>
+</body>
+</html>
