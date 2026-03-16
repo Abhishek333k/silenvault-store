@@ -20,6 +20,9 @@ class SVHeader extends HTMLElement {
                     </a>
 
                     <nav class="hidden md:flex items-center gap-6">
+                        <a href="request.html" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-colors font-mono">
+                            Custom Request
+                        </a>
                         <a href="https://silenvault.com" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-colors font-mono">
                             Return to Toolkit
                         </a>
