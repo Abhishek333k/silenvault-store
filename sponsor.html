@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SilenVault | Sponsor Protocol</title>
+    <title>SilenVault | Sponsorship</title>
     <meta name="description" content="Support SilenVault. Choose a method below to help fund server costs and ongoing development.">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -27,27 +27,17 @@
             background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1.25rem;
             box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02);
-            display: flex; flex-direction: column;
-            transition: transform 0.4s ease, border-color 0.4s ease;
+            display: flex; flex-direction: column; transition: transform 0.4s ease, border-color 0.4s ease;
         }
-        .premium-glass-panel:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            transform: translateY(-5px);
-        }
+        .premium-glass-panel:hover { border-color: rgba(255, 255, 255, 0.15); transform: translateY(-5px); }
 
-        /* Dynamic Amount Buttons for Premium Theme */
+        /* Dynamic Amount Buttons */
         .amount-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #94a3b8;
-            transition: all 0.2s ease;
-            font-family: 'Fira Code', monospace;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8; transition: all 0.2s ease; font-family: 'Fira Code', monospace;
         }
         .amount-btn:hover, .amount-btn.active {
-            background: #ffffff;
-            color: #000000;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-            border-color: #ffffff;
+            background: #ffffff; color: #000000; box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); border-color: #ffffff;
         }
 
         /* Main Action Button */
@@ -55,10 +45,44 @@
             background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%); color: #000;
             border-radius: 0.5rem; transition: all 0.3s ease; font-weight: 800;
             padding: 0.75rem 1.5rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-            width: 100%; text-transform: uppercase; letter-spacing: 0.05em;
-            box-shadow: 0 0 20px rgba(255,255,255,0.05);
+            width: 100%; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 0 20px rgba(255,255,255,0.05);
         }
         .btn-vip:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(255,255,255,0.2); background: #ffffff; }
+
+        /* HERO IMAGE ANIMATION (Portfolio Style) */
+        .hero-image-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .hero-image-wrapper::before {
+            content: '';
+            position: absolute;
+            width: 250px; height: 250px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: pulse-glow 4s infinite alternate ease-in-out;
+        }
+        .hero-float {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 320px;
+            animation: floating 4s ease-in-out infinite;
+            filter: drop-shadow(0px 20px 30px rgba(0,0,0,0.5));
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes pulse-glow {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
 
     </style>
 </head>
@@ -71,25 +95,34 @@
 
     <sv-header base-path="."></sv-header>
 
-    <main class="relative z-10 w-full max-w-6xl mx-auto px-4 pt-32 pb-24 text-center">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 border border-white/10 bg-white/5 backdrop-blur-md text-slate-300 text-[10px] font-bold mono tracking-widest rounded-full mb-6 uppercase">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            Sponsorship Options
-        </div>
+    <main class="relative z-10 w-full max-w-6xl mx-auto px-4 pt-32 pb-24">
         
-        <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter drop-shadow-2xl mb-4">
-            Support the <span class="text-transparent bg-clip-text bg-gradient-to-br from-slate-200 to-slate-600">Project</span>
-        </h1>
-        <p class="text-slate-400 font-light max-w-2xl mx-auto mb-16 leading-relaxed">
-            SilenVault operates as an independent platform. Your support funds server hosting, API usage, and ongoing tool development.
-        </p>
+        <div class="grid md:grid-cols-2 gap-12 items-center mb-20">
+            <div class="text-center md:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 border border-white/10 bg-white/5 backdrop-blur-md text-slate-300 text-[10px] font-bold mono tracking-widest rounded-full mb-6 uppercase">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Sponsorship Options
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter drop-shadow-2xl mb-6">
+                    Support the <span class="text-transparent bg-clip-text bg-gradient-to-br from-slate-200 to-slate-600">Project</span>
+                </h1>
+                <p class="text-slate-400 font-light max-w-lg mx-auto md:mx-0 leading-relaxed text-lg">
+                    SilenVault operates as an independent platform. Your support directly funds server hosting, API usage, and ongoing developer hours.
+                </p>
+            </div>
+            
+            <div class="hero-image-wrapper">
+                <img src="assets/img/hero.png" alt="SilenVault Developer" class="hero-float object-contain">
+            </div>
+        </div>
 
         <div class="grid md:grid-cols-3 gap-6 text-left">
+            
             <div class="premium-glass-panel p-8 relative">
                 <div class="absolute top-4 right-4 bg-white/10 text-white text-[9px] font-bold px-2 py-1 rounded border border-white/20 uppercase tracking-wider mono">
                     Zero Fees
                 </div>
-                
                 <div class="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
                     <h3 class="text-lg font-bold text-white tracking-tight">Domestic (UPI)</h3>
                 </div>
@@ -119,7 +152,6 @@
                     <h3 class="text-lg font-bold text-white tracking-tight">International</h3>
                 </div>
                 <p class="text-sm text-slate-400 mb-8 flex-1 font-light leading-relaxed">Secure international transfer via PayPal. Supports USD, EUR, and GBP global currencies.</p>
-                
                 <a href="https://paypal.me/Abhishek333k" target="_blank" class="btn-vip mt-auto bg-gradient-to-r from-blue-600 to-blue-400 text-white border-none hover:from-blue-500 hover:to-blue-300">
                     Send via PayPal
                 </a>
@@ -130,7 +162,6 @@
                     <h3 class="text-lg font-bold text-white tracking-tight">GitHub Sponsors</h3>
                 </div>
                 <p class="text-sm text-slate-400 mb-8 flex-1 font-light leading-relaxed">The official way to back the developer. Support open-source development via automated monthly tiers or one-time contributions.</p>
-                
                 <a href="https://github.com/sponsors/abhishek333k" target="_blank" class="btn-vip mt-auto">
                     Sponsor on GitHub
                 </a>
@@ -141,12 +172,10 @@
     <sv-footer base-path="."></sv-footer>
 
     <script>
-        // UPI Dynamic Generation Protocol
         const UPI_ID = "silenvault@kphdfc"; 
         const UPI_NAME = "SilenVault";
         
         function updateAmount(amount) {
-            // Update Active Button State
             document.querySelectorAll('.amount-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (parseInt(btn.getAttribute('data-amount')) === amount) {
@@ -154,23 +183,18 @@
                 }
             });
 
-            // Generate UPI Deep Link
             const deepLink = `upi://pay?pa=${UPI_ID}&pn=${UPI_NAME}&cu=INR&am=${amount}`;
-            
-            // Update UI Elements
             document.getElementById('pay-btn-amount').innerText = `₹${amount}`;
             document.getElementById('upi-link-btn').href = deepLink;
             document.getElementById('upi-link-qr').href = deepLink;
 
-            // Fetch QR Code from API
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(deepLink)}`;
             document.getElementById('upi-qr-img').src = qrUrl;
         }
 
-        // Initialize with default amount
         window.onload = () => updateAmount(50);
 
-        // Interactive Neural Canvas Protocol
+        // Neural Canvas Script
         const canvas = document.getElementById('neural-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, particles = [], mouse = { x: null, y: null, radius: 150 };
@@ -194,10 +218,7 @@
                 if (this.x < 0 || this.x > width) this.vx = -this.vx;
                 if (this.y < 0 || this.y > height) this.vy = -this.vy;
             }
-            draw() {
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; ctx.fill();
-            }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; ctx.fill(); }
         }
 
         function initParticles() {
