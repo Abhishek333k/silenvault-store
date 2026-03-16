@@ -3,6 +3,34 @@
  * Upgraded Evolved Cyberpunk UI with Crest Integration
  */
 
+// ==========================================
+// TELEMETRY PROTOCOL (Google Analytics GA4)
+// Automatically injected into all pages via DRY
+// ==========================================
+(function injectAnalytics() {
+    if (!window.gtag) {
+        // 1. Inject the external Google script
+        const scriptExternal = document.createElement('script');
+        scriptExternal.async = true;
+        scriptExternal.src = 'https://www.googletagmanager.com/gtag/js?id=G-GRK3JQ36T6';
+        document.head.appendChild(scriptExternal);
+
+        // 2. Inject the initialization config
+        const scriptInit = document.createElement('script');
+        scriptInit.innerHTML = `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-GRK3JQ36T6');
+        `;
+        document.head.appendChild(scriptInit);
+    }
+})();
+
+// ==========================================
+// COMPONENT ENGINE
+// ==========================================
+
 class SVHeader extends HTMLElement {
     connectedCallback() {
         const basePath = this.getAttribute('base-path') || '.';
@@ -15,7 +43,7 @@ class SVHeader extends HTMLElement {
                             <img src="${basePath}/assets/img/SILENVAULT_CREST.webp" alt="SilenVault Crest" class="w-full h-full object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
                         </div>
                         <span class="text-white font-black tracking-widest uppercase text-sm">
-                            SilenVault <span class="text-slate-500 font-light">// ARMORY</span>
+                            SilenVault <span class="text-slate-500 font-light">// STORE</span>
                         </span>
                     </a>
 
