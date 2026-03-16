@@ -47,8 +47,8 @@ class SVFooter extends HTMLElement {
                     
                     <div class="flex gap-6">
                         <a href="mailto:support@silenvault.com" class="text-xs text-slate-500 hover:text-white transition-colors mono">Support</a>
-                        <a href="#" class="text-xs text-slate-500 hover:text-white transition-colors mono">Terms of Service</a>
-                        <a href="#" class="text-xs text-slate-500 hover:text-white transition-colors mono">Privacy Policy</a>
+                        <a href="legal.html#terms" class="text-xs text-slate-500 hover:text-white transition-colors mono">Terms of Service</a>
+                        <a href="legal.html#privacy" class="text-xs text-slate-500 hover:text-white transition-colors mono">Privacy Policy</a>
                     </div>
                 </div>
             </footer>
