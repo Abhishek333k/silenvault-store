@@ -38,7 +38,7 @@ class SVHeader extends HTMLElement {
             <header class="fixed top-0 left-0 w-full z-50 bg-[#000000]/40 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
                 <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                     
-                    <a href="${basePath}/index.html" class="flex items-center gap-3 group">
+                    <a href="${basePath}/index" class="flex items-center gap-3 group">
                         <div class="w-8 h-8 flex items-center justify-center transform group-hover:scale-105 transition-transform">
                             <img src="${basePath}/assets/img/SILENVAULT_CREST.webp" alt="SilenVault Crest" class="w-full h-full object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
                         </div>
@@ -48,7 +48,7 @@ class SVHeader extends HTMLElement {
                     </a>
 
                     <nav class="hidden md:flex items-center gap-6">
-                        <a href="${basePath}/request.html" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-colors font-mono">
+                        <a href="${basePath}/request" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-colors font-mono">
                             Custom Request
                         </a>
                         <a href="https://silenvault.com" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-colors font-mono">
@@ -76,10 +76,10 @@ class SVFooter extends HTMLElement {
                     </div>
                     
                     <div class="flex flex-wrap justify-center gap-6">
-                        <a href="${basePath}/sponsor.html" class="text-xs text-slate-500 hover:text-white transition-colors mono">Sponsor Protocol</a>
+                        <a href="${basePath}/sponsor" class="text-xs text-slate-500 hover:text-white transition-colors mono">Sponsor Protocol</a>
                         <a href="mailto:support@silenvault.com" class="text-xs text-slate-500 hover:text-white transition-colors mono">Support</a>
-                        <a href="${basePath}/legal.html#terms" class="text-xs text-slate-500 hover:text-white transition-colors mono">Terms of Service</a>
-                        <a href="${basePath}/legal.html#privacy" class="text-xs text-slate-500 hover:text-white transition-colors mono">Privacy Policy</a>
+                        <a href="${basePath}/legal#terms" class="text-xs text-slate-500 hover:text-white transition-colors mono">Terms of Service</a>
+                        <a href="${basePath}/legal#privacy" class="text-xs text-slate-500 hover:text-white transition-colors mono">Privacy Policy</a>
                     </div>
                 </div>
             </footer>
