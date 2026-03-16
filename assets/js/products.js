@@ -176,7 +176,7 @@ function renderGrid(containerId, products) {
         }
 
         return `
-            <a href="item?id=${product.id}" class="premium-glass-card block group flex flex-col h-full bg-[rgba(255,255,255,0.02)] backdrop-blur-[24px] border border-white/5 rounded-2xl overflow-hidden transition-all duration-400 hover:border-white/20 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] cursor-pointer">
+            <div class="premium-glass-card group flex flex-col h-full bg-[rgba(255,255,255,0.02)] backdrop-blur-[24px] border border-white/5 rounded-2xl overflow-hidden transition-all duration-400 hover:border-white/20 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
                 <div class="card-media relative w-full h-56 bg-black border-b border-white/5 flex-shrink-0">
                     ${mediaHtml}
                     ${badgeHtml}
