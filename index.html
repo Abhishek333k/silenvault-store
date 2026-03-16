@@ -3,152 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SilenVault | Premium Cyberpunk Live Wallpapers</title>
-    <meta name="description" content="Upgrade your workspace with premium 4K, seamless looping hacker and cyberpunk live wallpapers for desktop and mobile.">
+    <title>SilenVault | Digital Armory & Premium Assets</title>
+    <meta name="description" content="Premium live wallpapers, automation scripts, and developer tools for the elite workspace.">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
     
     <script src="assets/js/layout.js" defer></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #020617; color: #f8fafc; margin: 0; min-height: 100vh; overflow-x: hidden; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #000000; /* Pure Pitch Black */
+            color: #f8fafc; 
+            margin: 0; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+        }
         .mono { font-family: 'Fira Code', monospace; }
         
-        /* Immersive Background Video Styling */
-        .hero-video-wrapper {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100vh;
-            z-index: -2;
+        /* 1. The Massive Unobstructed Video Background */
+        .cinematic-bg {
+            position: fixed; inset: 0; z-index: -2;
+            background-color: #000000;
             overflow: hidden;
-            background-color: #020617;
         }
-        .hero-video {
+        .cinematic-bg video {
             min-width: 100%; min-height: 100%;
             width: auto; height: auto;
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             object-fit: cover;
-            opacity: 0.4; /* Keep it dark so text is readable */
+            opacity: 0.35; /* Muted so it feels like atmosphere, not a distraction */
         }
-        .video-gradient {
+        
+        /* Deep Vignette to blend edges into pure black */
+        .cinematic-vignette {
             position: absolute; inset: 0; z-index: -1;
-            background: linear-gradient(to bottom, rgba(2,6,23,0.2) 0%, rgba(2,6,23,0.8) 70%, rgba(2,6,23,1) 100%);
+            background: radial-gradient(circle at center, transparent 0%, #000000 90%),
+                        linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 60%, #000000 100%);
         }
 
-        /* Glassmorphism */
-        .glass-card {
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(51, 65, 85, 0.6);
-            border-radius: 1rem;
+        /* 2. Sleek Frosted Glass Containers (No heavy red borders) */
+        .premium-glass-card {
+            background: rgba(255, 255, 255, 0.03); /* Barely visible tint */
+            backdrop-filter: blur(24px); /* Deep blur */
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Ultra-thin subtle border */
+            border-radius: 1.25rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .premium-glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-8px);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
-        /* Cyberpunk Button */
-        .btn-cyber {
-            background: #ff003c;
-            color: #000;
-            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+        /* Card Media Header */
+        .card-media {
+            width: 100%; height: 220px;
+            background: #000; position: relative; overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .card-media img, .card-media video {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.7s ease; opacity: 0.85;
+        }
+        .premium-glass-card:hover .card-media img, .premium-glass-card:hover .card-media video {
+            transform: scale(1.05); opacity: 1;
+        }
+
+        /* Premium Conversion Button */
+        .btn-vip {
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            color: #000000;
+            border-radius: 9999px; /* Pill shape for premium feel */
             transition: all 0.3s ease;
-            position: relative;
+            font-weight: 800;
+            box-shadow: 0 0 30px rgba(255,255,255,0.05);
         }
-        .btn-cyber:hover {
-            background: #00f0ff;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+        .btn-vip:hover {
+            background: #ffffff;
+            box-shadow: 0 0 40px rgba(255,255,255,0.2);
+            transform: scale(1.03);
         }
-        .btn-cyber::after {
-            content: '>>';
-            position: absolute; right: 15px; font-family: monospace; font-weight: bold;
-            opacity: 0; transform: translateX(-10px); transition: all 0.3s;
-        }
-        .btn-cyber:hover::after { opacity: 1; transform: translateX(0); }
+
+        /* 3. Typography Tags (Fira Code) */
+        .tag-visual { color: #e2e8f0; background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
 
-    <div class="hero-video-wrapper">
-        <video autoplay loop muted playsinline class="hero-video" id="bg-vid">
+    <div class="cinematic-bg">
+        <video autoplay loop muted playsinline>
             <source src="assets/media/preview_loop.mp4" type="video/mp4">
         </video>
-        <div class="video-gradient"></div>
+        <div class="cinematic-vignette"></div>
     </div>
 
     <sv-header base-path="."></sv-header>
 
-    <main class="relative z-10 w-full max-w-7xl mx-auto px-4 pt-32 md:pt-48 pb-20 flex flex-col items-center text-center">
-        
-        <div class="inline-block px-3 py-1 border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold mono tracking-widest rounded-full mb-6 uppercase">
-            SilenVault Digital Armory // 01
+    <main class="relative z-10 w-full max-w-7xl mx-auto px-4 pt-32 pb-16 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 border border-white/10 bg-white/5 backdrop-blur-md text-slate-300 text-[10px] font-bold mono tracking-widest rounded-full mb-8 uppercase">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Global Network // Live
         </div>
         
-        <h1 class="text-5xl md:text-7xl font-black text-white tracking-tight drop-shadow-2xl mb-6">
-            The <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-600">Core</span> Pack
+        <h1 class="text-5xl md:text-7xl font-black text-white tracking-tighter drop-shadow-2xl mb-6">
+            The Digital <span class="text-transparent bg-clip-text bg-gradient-to-br from-slate-200 to-slate-600">Armory</span>
         </h1>
-        
-        <p class="text-lg md:text-xl text-slate-300 max-w-2xl mb-10 leading-relaxed drop-shadow-md">
-            Transform your workspace. Premium, seamless 4K live wallpapers engineered for ultimate focus. Includes ultra-wide desktop and vertical mobile dimensions.
+        <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed font-light drop-shadow-md">
+            Elevate your workspace. Premium seamless live wallpapers, automation scripts, and developer tools forged for the elite.
         </p>
-
-        <div class="flex flex-col sm:flex-row items-center gap-6">
-            <a href="https://your-store.lemonsqueezy.com/checkout/buy/YOUR_PRODUCT_ID" class="lemonsqueezy-button btn-cyber px-12 py-4 text-lg font-black uppercase tracking-widest flex items-center gap-3">
-                Get Instant Access <span class="mono opacity-60">| $4.99</span>
-            </a>
-        </div>
-        
-        <p class="mt-4 text-xs text-slate-500 mono flex items-center gap-2">
-            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-            Secure checkout via Lemon Squeezy
-        </p>
-
     </main>
 
-    <section class="relative z-10 w-full bg-[#020617] border-t border-slate-800 pt-20 pb-24">
+    <section class="relative z-10 w-full pb-32 pt-8">
         <div class="max-w-7xl mx-auto px-4">
-            
-            <div class="grid md:grid-cols-3 gap-6 mb-16">
-                <div class="glass-card p-8">
-                    <svg class="w-8 h-8 text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                    <h3 class="text-lg font-bold text-white mb-2">Desktop & Mobile Specs</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">Includes meticulously cropped versions in 16:9 (Desktop/Ultrawide) and 9:16 (Smartphones), ensuring pixel-perfect fidelity on any screen.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <div class="premium-glass-card">
+                    <div class="card-media">
+                        <video autoplay loop muted playsinline>
+                            <source src="assets/media/preview_core.mp4" type="video/mp4">
+                        </video>
+                        <div class="absolute top-4 left-4 px-3 py-1 text-[9px] font-bold uppercase tracking-widest rounded-full tag-visual mono">Visual Asset</div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-1">
+                        <h2 class="text-2xl font-bold text-white mb-3 tracking-tight">The Core Pack (4K)</h2>
+                        <p class="text-sm text-slate-400 mb-8 flex-1 font-light leading-relaxed">
+                            Seamless 4K live wallpapers featuring deep cyberpunk server rooms. Includes perfectly cropped Ultra-Wide PC and Vertical Mobile files.
+                        </p>
+                        <div class="flex items-center justify-between border-t border-white/10 pt-6 mt-auto">
+                            <div class="flex flex-col">
+                                <span class="text-xs text-slate-500 mono uppercase tracking-widest mb-1">License</span>
+                                <span class="text-2xl font-bold text-white mono">$3.99</span>
+                            </div>
+                            <a href="https://your-store.lemonsqueezy.com/checkout/buy/PRODUCT_ID_1" class="lemonsqueezy-button btn-vip px-8 py-3 text-sm uppercase tracking-wide">
+                                Acquire
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="glass-card p-8">
-                    <svg class="w-8 h-8 text-purple-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                    <h3 class="text-lg font-bold text-white mb-2">Flawless Seamless Loops</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">Engineered using advanced frame-blending so the animation never jumps. Your terminal lights will pulse eternally.</p>
+
+                <div class="premium-glass-card">
+                    <div class="card-media">
+                        <img src="assets/images/preview_script.jpg" alt="Script Terminal Preview">
+                        <div class="absolute top-4 left-4 px-3 py-1 text-[9px] font-bold uppercase tracking-widest rounded-full tag-visual mono">Automation</div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-1">
+                        <h2 class="text-2xl font-bold text-white mb-3 tracking-tight">OS Ghost Config</h2>
+                        <p class="text-sm text-slate-400 mb-8 flex-1 font-light leading-relaxed">
+                            A lightweight batch execution script to instantly kill telemetry, flush temp cache, and optimize Windows 11 for pure development focus.
+                        </p>
+                        <div class="flex items-center justify-between border-t border-white/10 pt-6 mt-auto">
+                            <div class="flex flex-col">
+                                <span class="text-xs text-slate-500 mono uppercase tracking-widest mb-1">License</span>
+                                <span class="text-2xl font-bold text-white mono">$4.99</span>
+                            </div>
+                            <a href="https://your-store.lemonsqueezy.com/checkout/buy/PRODUCT_ID_2" class="lemonsqueezy-button btn-vip px-8 py-3 text-sm uppercase tracking-wide">
+                                Acquire
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="glass-card p-8">
-                    <svg class="w-8 h-8 text-emerald-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                    <h3 class="text-lg font-bold text-white mb-2">Engine Optimized</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">High bitrate H.264 .mp4 files optimized for minimal CPU/GPU usage when running in Wallpaper Engine or Lively Wallpaper.</p>
+
+                <div class="premium-glass-card">
+                    <div class="card-media">
+                        <img src="assets/images/preview_forge.jpg" alt="DevNexus Tool Preview">
+                        <div class="absolute top-4 left-4 px-3 py-1 text-[9px] font-bold uppercase tracking-widest rounded-full tag-visual mono">Software</div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-1">
+                        <h2 class="text-2xl font-bold text-white mb-3 tracking-tight">VaultForge Sandbox</h2>
+                        <p class="text-sm text-slate-400 mb-8 flex-1 font-light leading-relaxed">
+                            The exact local Electron testing environment used to build SilenVault tools. Includes the stealth Ghost Renderer and hotkey configurations.
+                        </p>
+                        <div class="flex items-center justify-between border-t border-white/10 pt-6 mt-auto">
+                            <div class="flex flex-col">
+                                <span class="text-xs text-slate-500 mono uppercase tracking-widest mb-1">License</span>
+                                <span class="text-2xl font-bold text-white mono">$14.99</span>
+                            </div>
+                            <a href="https://your-store.lemonsqueezy.com/checkout/buy/PRODUCT_ID_3" class="lemonsqueezy-button btn-vip px-8 py-3 text-sm uppercase tracking-wide">
+                                Acquire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="relative z-10 border-t border-white/5 bg-[#000000] py-16">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-center gap-12 text-center md:text-left">
+            <div class="flex items-center gap-4 opacity-70 hover:opacity-100 transition-opacity">
+                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                <div>
+                    <h4 class="font-bold text-white text-sm tracking-wide">Secure Delivery</h4>
+                    <p class="text-xs text-slate-400 font-light mt-1">Processed natively by Lemon Squeezy.</p>
                 </div>
             </div>
-
-            <div class="max-w-3xl mx-auto mt-20">
-                <h2 class="text-2xl font-black text-center mb-8 uppercase tracking-widest text-slate-300">Intel // FAQ</h2>
-                
-                <div class="space-y-4">
-                    <div class="glass-card p-6">
-                        <h4 class="font-bold text-blue-400 mb-2 mono text-sm">Q: How do I apply these to my desktop?</h4>
-                        <p class="text-sm text-slate-400">Windows doesn't support live wallpapers natively. You need to use a software engine. We highly recommend <strong class="text-slate-200">Wallpaper Engine</strong> (Steam, $4) or <strong class="text-slate-200">Lively Wallpaper</strong> (Open Source, Free). Simply drag and drop the downloaded .mp4 file into the app.</p>
-                    </div>
-                    
-                    <div class="glass-card p-6">
-                        <h4 class="font-bold text-blue-400 mb-2 mono text-sm">Q: How do I apply these to my phone?</h4>
-                        <p class="text-sm text-slate-400">Most modern Android and iOS devices allow you to set an .mp4 as your lock screen directly from your gallery app. For home screens, you may need a free third-party app like "Video Live Wallpaper".</p>
-                    </div>
-                    
-                    <div class="glass-card p-6">
-                        <h4 class="font-bold text-blue-400 mb-2 mono text-sm">Q: What exactly is in the download?</h4>
-                        <p class="text-sm text-slate-400">Upon purchase, you will instantly receive a secure link to download a .zip file containing the high-res Desktop .mp4, the Mobile .mp4, and an instructions manual.</p>
-                    </div>
+            <div class="hidden md:block w-px h-10 bg-white/10"></div>
+            <div class="flex items-center gap-4 opacity-70 hover:opacity-100 transition-opacity">
+                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                <div>
+                    <h4 class="font-bold text-white text-sm tracking-wide">Instant Access</h4>
+                    <p class="text-xs text-slate-400 font-light mt-1">Encrypted download links sent immediately.</p>
                 </div>
             </div>
-
         </div>
     </section>
 
