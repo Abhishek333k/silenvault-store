@@ -1,87 +1,75 @@
-/**
- * SilenVault Digital Armory - Product Matrix
- * Add, remove, or modify your products here. The engine will auto-render the grid.
- */
+// ==========================================
+// TELEMETRY PROTOCOL (Google Analytics GA4)
+// ==========================================
+(function injectAnalytics() {
+    if (!window.gtag) {
+        const scriptExternal = document.createElement('script');
+        scriptExternal.async = true;
+        scriptExternal.src = 'https://www.googletagmanager.com/gtag/js?id=G-GRK3JQ36T6';
+        document.head.appendChild(scriptExternal);
 
-const svProducts = [
-    {
-        id: "core-pack-01",
-        title: "The Core Pack (4K)",
-        description: "A curated pack of high-fidelity, seamless 4K live wallpapers. Includes perfectly cropped Ultra-Wide PC and Vertical Mobile files.",
-        price: "$3.99",
-        tag: "Visual Asset",
-        checkoutUrl: "#", // REPLACE WITH LEMON SQUEEZY LINK
-        // CSS Animated Mesh for Wallpapers
-        mediaHtml: `<div class="animated-mesh"></div>
-                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <span class="text-white/50 font-bold tracking-widest uppercase mono text-xs">Live Preview</span>
-                    </div>`
-    },
-    {
-        id: "os-ghost-config",
-        title: "OS Ghost Config",
-        description: "A lightweight batch execution script to instantly kill telemetry, flush temp cache, and optimize Windows 11 for pure development focus.",
-        price: "$4.99",
-        tag: "Automation",
-        checkoutUrl: "#", // REPLACE WITH LEMON SQUEEZY LINK
-        // SVG Placeholder for Scripts
-        mediaHtml: `<div class="w-full h-full bg-gradient-to-br from-slate-900 to-black flex items-center justify-center">
-                        <svg class="w-16 h-16 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 9l3 3-3 3m5 0h3M4 17h16a2 2 0 002-2V9a2 2 0 00-2-2H4a2 2 0 00-2 2v6a2 2 0 002 2z" /></svg>
-                    </div>`
-    },
-    {
-        id: "vaultforge-sandbox",
-        title: "VaultForge Sandbox",
-        description: "The exact local Electron testing environment used to build SilenVault tools. Includes the stealth Ghost Renderer and hotkey configurations.",
-        price: "$14.99",
-        tag: "Software",
-        checkoutUrl: "#", // REPLACE WITH LEMON SQUEEZY LINK
-        // SVG Placeholder for Software
-        mediaHtml: `<div class="w-full h-full bg-gradient-to-br from-slate-900 to-black flex items-center justify-center">
-                        <svg class="w-16 h-16 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-                    </div>`
+        const scriptInit = document.createElement('script');
+        scriptInit.innerHTML = `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-GRK3JQ36T6');
+        `;
+        document.head.appendChild(scriptInit);
     }
-    // TO ADD A NEW PRODUCT, JUST COPY/PASTE ONE OF THE BLOCKS ABOVE.
-];
+})();
 
-function renderProductMatrix() {
-    const grid = document.getElementById('product-grid');
-    if (!grid) return;
-
-    const html = svProducts.map(product => `
-        <div class="premium-glass-card">
-            <div class="card-media">
-                ${product.mediaHtml}
-                <div class="absolute top-4 left-4 px-3 py-1 text-[9px] font-bold uppercase tracking-widest rounded-full tag-visual mono">
-                    ${product.tag}
-                </div>
-            </div>
-            <div class="p-8 flex flex-col flex-1">
-                <h2 class="text-2xl font-bold text-white mb-3 tracking-tight">${product.title}</h2>
-                <p class="text-sm text-slate-400 mb-8 flex-1 font-light leading-relaxed">
-                    ${product.description}
-                </p>
-                <div class="flex items-center justify-between border-t border-white/10 pt-6 mt-auto">
-                    <div class="flex flex-col">
-                        <span class="text-xs text-slate-500 mono uppercase tracking-widest mb-1">License</span>
-                        <span class="text-2xl font-bold text-white mono">${product.price}</span>
-                    </div>
-                    <a href="${product.checkoutUrl}" class="lemonsqueezy-button btn-vip px-8 py-3 text-sm uppercase tracking-wide">
-                        Acquire
+class SVHeader extends HTMLElement {
+    connectedCallback() {
+        const basePath = this.getAttribute('base-path') || '.';
+        this.innerHTML = `
+            <header class="fixed top-0 left-0 w-full z-50 bg-[#000000]/40 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
+                <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+                    <a href="${basePath}/index.html" class="flex items-center gap-3 group">
+                        <div class="w-8 h-8 flex items-center justify-center transform group-hover:scale-105 transition-transform">
+                            <img src="${basePath}/assets/img/SILENVAULT_CREST.webp" alt="SilenVault Crest" class="w-full h-full object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+                        </div>
+                        <span class="text-white font-black tracking-widest uppercase text-sm">
+                            SilenVault <span class="text-slate-500 font-light">// STORE</span>
+                        </span>
                     </a>
+                    <nav class="hidden md:flex items-center gap-6">
+                        <a href="${basePath}/request.html" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-colors font-mono">
+                            Custom Request
+                        </a>
+                        <a href="https://silenvault.com" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-colors font-mono">
+                            Main Site
+                        </a>
+                    </nav>
                 </div>
-            </div>
-        </div>
-    `).join('');
-
-    grid.innerHTML = html;
-
-    // We must re-initialize Lemon Squeezy AFTER we inject the buttons, 
-    // otherwise the checkout popups won't bind to the dynamic HTML.
-    if (window.createLemonSqueezy) {
-        window.createLemonSqueezy();
+            </header>
+        `;
     }
 }
 
-// Render products as soon as the DOM is ready
-document.addEventListener('DOMContentLoaded', renderProductMatrix);
+class SVFooter extends HTMLElement {
+    connectedCallback() {
+        const basePath = this.getAttribute('base-path') || '.';
+        this.innerHTML = `
+            <footer class="w-full bg-[#000000] border-t border-white/5 pt-12 pb-8 z-10 relative">
+                <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <img src="${basePath}/assets/img/SILENVAULT_CREST.webp" alt="SV" class="w-5 h-5 object-contain opacity-50">
+                        <span class="text-slate-500 text-xs font-mono uppercase tracking-widest">
+                            © ${new Date().getFullYear()} SilenVault. All rights reserved.
+                        </span>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-6">
+                        <a href="${basePath}/sponsor.html" class="text-xs text-slate-500 hover:text-white transition-colors mono">Sponsor</a>
+                        <a href="mailto:support@silenvault.com" class="text-xs text-slate-500 hover:text-white transition-colors mono">Support</a>
+                        <a href="${basePath}/legal.html#terms" class="text-xs text-slate-500 hover:text-white transition-colors mono">Terms of Service</a>
+                        <a href="${basePath}/legal.html#privacy" class="text-xs text-slate-500 hover:text-white transition-colors mono">Privacy Policy</a>
+                    </div>
+                </div>
+            </footer>
+        `;
+    }
+}
+
+customElements.define('sv-header', SVHeader);
+customElements.define('sv-footer', SVFooter);
