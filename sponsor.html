@@ -72,30 +72,29 @@
     <sv-header base-path="."></sv-header>
 
     <main class="relative z-10 w-full max-w-6xl mx-auto px-4 pt-32 pb-24 text-center">
-        
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 border border-white/10 bg-white/5 backdrop-blur-md text-slate-300 text-[10px] font-bold mono tracking-widest rounded-full mb-6 uppercase">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Sponsorship Options
+        </div>
         
         <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter drop-shadow-2xl mb-4">
-            Support the <span class="text-transparent bg-clip-text bg-gradient-to-br from-slate-200 to-slate-600">Network</span>
+            Support the <span class="text-transparent bg-clip-text bg-gradient-to-br from-slate-200 to-slate-600">Project</span>
         </h1>
         <p class="text-slate-400 font-light max-w-2xl mx-auto mb-16 leading-relaxed">
-            SilenVault operates as an independent platform. Your support funds server hosting, API usage, and ongoing open-source development.
+            SilenVault operates as an independent platform. Your support funds server hosting, API usage, and ongoing tool development.
         </p>
 
         <div class="grid md:grid-cols-3 gap-6 text-left">
-            
             <div class="premium-glass-panel p-8 relative">
                 <div class="absolute top-4 right-4 bg-white/10 text-white text-[9px] font-bold px-2 py-1 rounded border border-white/20 uppercase tracking-wider mono">
                     Zero Fees
                 </div>
                 
                 <div class="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-                    <div class="w-10 h-10 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-white">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    </div>
                     <h3 class="text-lg font-bold text-white tracking-tight">Domestic (UPI)</h3>
                 </div>
 
-                <a id="upi-link-qr" href="#" class="block bg-white/90 p-2 rounded-xl w-fit mx-auto mb-6 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:scale-105 transition-transform cursor-pointer" title="Tap to Open Payment App">
+                <a id="upi-link-qr" href="#" class="block bg-white/90 p-2 rounded-xl w-fit mx-auto mb-6 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:scale-105 transition-transform cursor-pointer">
                     <img id="upi-qr-img" src="" alt="Tap to Pay" class="w-40 h-40 object-contain">
                 </a>
 
@@ -107,7 +106,7 @@
                 </div>
                 
                 <a id="upi-link-btn" href="#" class="btn-vip mb-4">
-                    Transmit <span id="pay-btn-amount">₹50</span>
+                    Pay <span id="pay-btn-amount">₹50</span>
                 </a>
 
                 <div class="text-center mt-auto">
@@ -117,9 +116,6 @@
 
             <div class="premium-glass-panel p-8">
                 <div class="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-                    <div class="w-10 h-10 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-white">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.946 5.05-3.691 6.67-6.936 6.67H10.97l-1.326 8.39c-.066.417-.42.743-.843.743h-1.725z"/></svg>
-                    </div>
                     <h3 class="text-lg font-bold text-white tracking-tight">International</h3>
                 </div>
                 <p class="text-sm text-slate-400 mb-8 flex-1 font-light leading-relaxed">Secure international transfer via PayPal. Supports USD, EUR, and GBP global currencies.</p>
@@ -127,24 +123,18 @@
                 <a href="https://paypal.me/Abhishek333k" target="_blank" class="btn-vip mt-auto bg-gradient-to-r from-blue-600 to-blue-400 text-white border-none hover:from-blue-500 hover:to-blue-300">
                     Send via PayPal
                 </a>
-                <p class="text-[10px] text-slate-600 text-center mt-4 font-mono uppercase tracking-widest">Standard fees apply</p>
             </div>
 
             <div class="premium-glass-panel p-8">
                 <div class="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-                    <div class="w-10 h-10 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-white">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    </div>
                     <h3 class="text-lg font-bold text-white tracking-tight">GitHub Sponsors</h3>
                 </div>
-                <p class="text-sm text-slate-400 mb-8 flex-1 font-light leading-relaxed">The official way to back the developer. Support the open-source core via automated monthly tiers or one-time contributions.</p>
+                <p class="text-sm text-slate-400 mb-8 flex-1 font-light leading-relaxed">The official way to back the developer. Support open-source development via automated monthly tiers or one-time contributions.</p>
                 
                 <a href="https://github.com/sponsors/abhishek333k" target="_blank" class="btn-vip mt-auto">
                     Sponsor on GitHub
                 </a>
-                <p class="text-[10px] text-slate-600 text-center mt-4 font-mono uppercase tracking-widest">Direct Developer Support</p>
             </div>
-
         </div>
     </main>
 
