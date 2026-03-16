@@ -1,6 +1,6 @@
 /**
  * SilenVault Digital Store - Dynamic Engine
- * Features: Google Sheets CMS, GitHub API Folder Scanning, Custom Video Player
+ * Features: Google Sheets CMS, GitHub API Folder Scanning, Custom Video Player, Empty States
  */
 
 const SHEET_ID = '1VvnEPxq42uf_ZJGLmTIpvJXs3J0tF2gYEh49NT47ZBw'; 
@@ -24,7 +24,7 @@ async function fetchAndRenderProducts() {
                 price: row.c[4] ? row.c[4].v : 'FREE',
                 type: row.c[5] ? row.c[5].v : 'Free',
                 tag: row.c[6] ? row.c[6].v : 'Asset',
-                folderPath: row.c[7] ? row.c[7].v : '', // This is now a folder path
+                folderPath: row.c[7] ? row.c[7].v : '', // This is a folder path (e.g. assets/products/pack-01)
                 checkoutUrl: row.c[8] ? row.c[8].v : '#'
             };
         }).filter(p => p.id !== '' && p.status.toLowerCase() === 'published');
@@ -90,7 +90,7 @@ function renderGrid(containerId, products) {
     const grid = document.getElementById(containerId);
     if (!grid) return;
 
-    // --- NEW EMPTY STATE LOGIC ---
+    // --- EMPTY STATE LOGIC ---
     if (products.length === 0) {
         let emptyMessage = "New assets arriving soon. Stay tuned.";
         
@@ -108,6 +108,11 @@ function renderGrid(containerId, products) {
         return;
     }
 
+    // --- PRODUCT GENERATION LOOP (You accidentally deleted this part!) ---
+    grid.innerHTML = products.map(product => {
+        const isPremium = product.type.toLowerCase() === 'premium';
+        let mediaHtml = '';
+
         // UI Tagging
         const badgeHtml = isPremium 
             ? `<div class="absolute top-4 right-4 z-30 bg-blue-500/10 text-blue-400 text-[10px] font-bold px-2 py-1 rounded border border-blue-500/20 uppercase tracking-wider flex items-center gap-1 backdrop-blur-md">
@@ -118,7 +123,7 @@ function renderGrid(containerId, products) {
                </div>`;
 
         // BUILD MEDIA CONTAINER (Video takes priority, else images, else fallback)
-        if (product.videos.length > 0) {
+        if (product.videos && product.videos.length > 0) {
             // Render Premium Custom Video Player
             mediaHtml = `
                 <div class="custom-video-wrapper w-full h-full relative group">
@@ -149,7 +154,7 @@ function renderGrid(containerId, products) {
                         </button>
                     </div>
                 </div>`;
-        } else if (product.images.length > 0) {
+        } else if (product.images && product.images.length > 0) {
             // Render Image Hover Slider
             const imageTags = product.images.map((img, index) => 
                 `<img src="${img}" alt="${product.title}" class="slider-img ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'} absolute inset-0 w-full h-full object-cover transition-opacity duration-700">`
@@ -196,7 +201,7 @@ function renderGrid(containerId, products) {
                 </div>
             </div>
         `;
-    }).join('');
+    }).join(''); // --- END OF PRODUCT GENERATION LOOP ---
 }
 
 // 4. LOGIC: MULTI-IMAGE HOVER
