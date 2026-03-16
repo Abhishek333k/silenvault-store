@@ -1,0 +1,165 @@
+---
+pagination:
+  data: products
+  size: 1
+  alias: product
+permalink: "item/{{ product.ID }}/index.html"
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.Title }} | SilenVault Store</title>
+    <meta name="description" content="{{ product.Description }}">
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": "{{ product.Title }}",
+        "description": "{{ product.Description }}",
+        "brand": { "@type": "Brand", "name": "SilenVault" },
+        "offers": {
+            "@type": "Offer",
+            "priceCurrency": "USD",
+            "price": "{{ '0.00' if product.Price == 'FREE' else product.Price | replace('$', '') }}",
+            "availability": "https://schema.org/InStock"
+        }
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <script src="/assets/js/layout.js" defer></script>
+    <script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #f8fafc; margin: 0; min-height: 100vh; overflow-x: hidden; }
+        .mono { font-family: 'Fira Code', monospace; }
+        .cinematic-bg { position: fixed; inset: 0; z-index: -2; background-color: #02040a; overflow: hidden; }
+        .cinematic-vignette { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at center, transparent 0%, #000000 100%), linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 80%, #000000 100%); }
+        .premium-glass-panel { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1.25rem; box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02); overflow: hidden; }
+        .btn-action { background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%); color: #000; border-radius: 0.5rem; transition: all 0.3s ease; font-weight: 800; padding: 1rem 2rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 0 20px rgba(255,255,255,0.05); }
+        .btn-action:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(255,255,255,0.2); background: #ffffff; }
+    </style>
+</head>
+<body>
+
+    <div class="cinematic-bg">
+        <canvas id="neural-canvas"></canvas>
+        <div class="cinematic-vignette"></div>
+    </div>
+
+    <sv-header base-path="/"></sv-header>
+
+    <main class="relative z-10 w-full max-w-6xl mx-auto px-4 pt-32 pb-24">
+        <a href="/" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold mono uppercase tracking-widest mb-8">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Back to Store
+        </a>
+
+        <div class="grid md:grid-cols-2 gap-12 items-start">
+            
+            <div class="premium-glass-panel p-2">
+                <div class="w-full aspect-square bg-black rounded-xl overflow-hidden relative flex items-center justify-center">
+                    {% if product.videoFiles.length > 0 %}
+                        <video src="{{ product.videoFiles[0] }}" class="w-full h-full object-cover" autoplay loop muted playsinline></video>
+                    {% elif product.mediaFiles.length > 0 %}
+                        <img src="{{ product.mediaFiles[0] }}" class="w-full h-full object-cover" alt="{{ product.Title }}">
+                    {% else %}
+                        <span class="text-slate-600 font-mono text-xs">NO MEDIA FOUND</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="flex flex-col h-full">
+                <div class="inline-flex w-fit items-center gap-2 px-3 py-1 border border-white/10 bg-white/5 backdrop-blur-md text-slate-300 text-[10px] font-bold mono tracking-widest rounded-full mb-4 uppercase">
+                    {{ product.Tag }}
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter drop-shadow-2xl mb-4">{{ product.Title }}</h1>
+                
+                <div class="flex items-center gap-4 mb-6 pb-6 border-b border-white/10">
+                    <span class="text-3xl font-bold text-blue-400 mono">{{ product.Price }}</span>
+                    {% if product.Type | lower == 'premium' %}
+                    <span class="bg-blue-500/20 text-blue-400 text-[10px] font-bold px-2 py-1 rounded border border-blue-500/30 uppercase tracking-wider">Premium Asset</span>
+                    {% endif %}
+                </div>
+
+                <p class="text-slate-400 font-light leading-relaxed text-lg mb-8">{{ product.Description }}</p>
+
+                <div class="mt-auto">
+                    <a href="{{ product.CheckoutURL }}" class="lemonsqueezy-button btn-action mb-4">
+                        {% if product.Type | lower == 'premium' %}Secure Checkout{% else %}Download Now{% endif %}
+                    </a>
+                    <div class="flex items-center justify-center gap-2 text-slate-500 text-xs mono">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        Secure Checkout via Lemon Squeezy
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <sv-footer base-path="/"></sv-footer>
+    
+    <script>
+        // Perfected Interactive Neural Canvas
+        const canvas = document.getElementById('neural-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [], mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+        window.addEventListener('touchmove', (e) => { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; });
+        window.addEventListener('touchend', () => { mouse.x = null; mouse.y = null; });
+
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; initParticles(); }
+        window.addEventListener('resize', resize);
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 1.5 + 0.5; 
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > height) this.vy = -this.vy;
+            }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; ctx.fill(); }
+        }
+
+        function initParticles() {
+            particles = [];
+            let numberOfParticles = (width * height) / 14000; 
+            for (let i = 0; i < numberOfParticles; i++) { particles.push(new Particle()); }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update(); particles[i].draw();
+                for (let j = i; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x; let dy = particles[i].y - particles[j].y; let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        ctx.beginPath(); ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - distance/1000})`; ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                    }
+                }
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = particles[i].x - mouse.x; let dy = particles[i].y - mouse.y; let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        ctx.beginPath(); ctx.strokeStyle = `rgba(0, 240, 255, ${0.3 - distance/500})`; ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        resize(); animate();
+    </script>
+</body>
+</html>
