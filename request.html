@@ -67,7 +67,7 @@
     <main class="relative z-10 w-full max-w-3xl mx-auto px-4 pt-32 pb-24 text-center">
         <div class="inline-flex items-center gap-2 px-4 py-1.5 border border-white/10 bg-white/5 backdrop-blur-md text-slate-300 text-[10px] font-bold mono tracking-widest rounded-full mb-6 uppercase">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            Contact Protocol
+            Contact Support
         </div>
         <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter drop-shadow-2xl mb-4">
             Custom <span class="text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-emerald-400">Requests</span>
@@ -149,10 +149,10 @@
         const statusMsg = document.getElementById('status-msg');
 
         form.addEventListener('submit', async function(e) {
-            e.preventDefault(); // Stop standard redirect
+            e.preventDefault(); 
             
             // UI Loading State
-            submitBtn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> TRANSMITTING...`;
+            submitBtn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> SENDING...`;
             submitBtn.disabled = true;
             statusMsg.classList.add('hidden');
 
@@ -174,7 +174,7 @@
                 } else {
                     // Web3Forms API Error UI
                     statusMsg.className = "mt-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm font-bold text-center mono";
-                    statusMsg.innerText = "TRANSMISSION FAILED: " + (data.message || "Please check your file sizes.");
+                    statusMsg.innerText = "SUBMISSION FAILED: " + (data.message || "Please check your file sizes.");
                 }
             } catch (error) {
                 // Network Error UI
