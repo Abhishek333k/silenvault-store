@@ -76,10 +76,11 @@ class SVFooter extends HTMLElement {
                     </div>
                     
                     <div class="flex flex-wrap justify-center gap-6">
-                        <a href="${basePath}/sponsor" class="text-xs text-slate-500 hover:text-white transition-colors mono">Sponsor Protocol</a>
+                        <a href="${basePath}/about" class="text-xs text-slate-500 hover:text-white transition-colors mono">About</a>
+                        <a href="${basePath}/sponsor" class="text-xs text-slate-500 hover:text-white transition-colors mono">Sponsor</a>
                         <a href="mailto:support@silenvault.com" class="text-xs text-slate-500 hover:text-white transition-colors mono">Support</a>
-                        <a href="${basePath}/legal#terms" class="text-xs text-slate-500 hover:text-white transition-colors mono">Terms of Service</a>
-                        <a href="${basePath}/legal#privacy" class="text-xs text-slate-500 hover:text-white transition-colors mono">Privacy Policy</a>
+                        <a href="${basePath}/legal#terms" class="text-xs text-slate-500 hover:text-white transition-colors mono">Terms</a>
+                        <a href="${basePath}/legal#privacy" class="text-xs text-slate-500 hover:text-white transition-colors mono">Privacy</a>
                     </div>
                 </div>
             </footer>
