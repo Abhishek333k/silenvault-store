@@ -65,52 +65,49 @@
 
     <main class="relative z-10 w-full max-w-3xl mx-auto px-4 pt-32 pb-24 text-center">
         <div class="inline-flex items-center gap-2 px-4 py-1.5 border border-white/10 bg-white/5 backdrop-blur-md text-slate-300 text-[10px] font-bold mono tracking-widest rounded-full mb-6 uppercase">
-            Comms Channel Open
+            Contact Us
         </div>
         <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter drop-shadow-2xl mb-4">
-            Bespoke <span class="text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-emerald-400">Requests</span>
+            Custom <span class="text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-emerald-400">Requests</span>
         </h1>
-        <p class="text-slate-400 font-light max-w-xl mx-auto mb-10">Need a custom live wallpaper resolution? Have a specific automation script request? Upload your references and transmit your specifications below.</p>
+        <p class="text-slate-400 font-light max-w-xl mx-auto mb-10">Need a custom live wallpaper resolution? Have a specific script request? Upload your references and submit your details below.</p>
 
         <div class="premium-glass-panel p-8 md:p-12 text-left">
-            <form action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data" id="custom-request-form">
-                
-                <input type="hidden" name="access_key" value="0135be82-f029-404d-81ac-6ad5282f23c1">
-                
+            <form action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
                 <input type="hidden" name="subject" value="New Custom Request from SilenVault Store">
                 <input type="hidden" name="redirect" value="https://store.silenvault.com/request.html?success=true">
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
-                        <label class="sv-label">Alias / Name</label>
-                        <input type="text" name="name" required class="sv-input" placeholder="Enter your identifier">
+                        <label class="sv-label">Your Name</label>
+                        <input type="text" name="name" required class="sv-input" placeholder="Enter your name">
                     </div>
                     <div>
-                        <label class="sv-label">Secure Comm Link (Email)</label>
+                        <label class="sv-label">Email Address</label>
                         <input type="email" name="email" required class="sv-input" placeholder="Enter your email">
                     </div>
                 </div>
 
                 <div class="mb-6">
-                    <label class="sv-label">Asset Classification</label>
+                    <label class="sv-label">Request Type</label>
                     <select name="request_type" required class="sv-input appearance-none">
                         <option value="Custom Wallpaper">Custom Live Wallpaper</option>
-                        <option value="Script Automation">Script Automation (.bat/.ps1)</option>
+                        <option value="Script Automation">Custom Script (.bat/.ps1)</option>
                         <option value="Software Tool">Software / Tool Modification</option>
                         <option value="Other">Other Query</option>
                     </select>
                 </div>
 
                 <div class="mb-6">
-                    <label class="sv-label">Specification Details</label>
-                    <textarea name="message" required rows="5" class="sv-input" placeholder="Describe your exact requirements. If requesting a wallpaper, specify resolution, aspect ratio, and aesthetic..."></textarea>
+                    <label class="sv-label">Request Details</label>
+                    <textarea name="message" required rows="5" class="sv-input" placeholder="Describe your exact requirements..."></textarea>
                 </div>
 
                 <div class="mb-8">
                     <label class="sv-label">Reference Attachments (Optional)</label>
                     <div class="file-upload-wrapper">
                         <div class="file-upload-btn">
-                            <svg class="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                             <span class="text-sm font-bold" id="file-name-display">Click or Drag File Here</span>
                             <span class="text-xs text-slate-500 font-light">Max 10MB (Images, ZIP, TXT)</span>
                         </div>
@@ -118,10 +115,10 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-submit">Transmit Encrypted Request</button>
+                <button type="submit" class="btn-submit">Submit Request</button>
                 
                 <div id="success-msg" class="hidden mt-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-emerald-400 text-sm font-bold text-center mono">
-                    TRANSMISSION SUCCESSFUL. WE WILL REVIEW AND RESPOND SHORTLY.
+                    REQUEST SUBMITTED SUCCESSFULLY. WE WILL RESPOND SHORTLY.
                 </div>
             </form>
         </div>
