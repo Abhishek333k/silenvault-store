@@ -33,7 +33,7 @@ async function fetchAndRenderProducts() {
         const products = await Promise.all(productsRaw.map(async (p) => {
             const files = await scanDirectory(p.folderPath);
             p.videos = files.filter(f => f.endsWith('.mp4') || f.endsWith('.webm'));
-            p.images = files.filter(f => f.endsWith('.webp') || f.endsWith('.jpg') || f.endsWith('.png') || f.endsWith('.gif'));
+            p.images = files.filter(f => f.endsWith('.webp') || f.endsWith('.jpg') || f.endsWith('.jpeg') || f.endsWith('.png') || f.endsWith('.gif'));
             return p;
         }));
 
@@ -75,7 +75,7 @@ async function scanDirectory(folderPath) {
         
         const data = await res.json();
         // Extract filenames and reconstruct the local path
-        const files = data.filter(item => item.type === 'file').map(item => `${folderPath}/${item.name}`);
+        const files = data.filter(item => item.type === 'file').map(item => `/${folderPath}/${item.name}`);
         
         sessionStorage.setItem(cacheKey, JSON.stringify(files));
         return files;

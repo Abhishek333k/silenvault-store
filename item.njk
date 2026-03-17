@@ -39,9 +39,13 @@ permalink: "item/{{ product.ID }}/index.html"
         .mono { font-family: 'Fira Code', monospace; }
         .cinematic-bg { position: fixed; inset: 0; z-index: -2; background-color: #02040a; overflow: hidden; }
         .cinematic-vignette { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at center, transparent 0%, #000000 100%), linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 80%, #000000 100%); }
-        .premium-glass-panel { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1.25rem; box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02); overflow: hidden; }
+        .premium-glass-panel { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1rem; box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02); overflow: hidden; }
         .btn-action { background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%); color: #000; border-radius: 0.5rem; transition: all 0.3s ease; font-weight: 800; padding: 1rem 2rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 0 20px rgba(255,255,255,0.05); }
         .btn-action:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(255,255,255,0.2); background: #ffffff; }
+        
+        /* Hide Scrollbar for Thumbnails but keep functionality */
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body>
@@ -53,67 +57,196 @@ permalink: "item/{{ product.ID }}/index.html"
 
     <sv-header base-path="/"></sv-header>
 
-    <main class="relative z-10 w-full max-w-6xl mx-auto px-4 pt-32 pb-24">
-        <a href="/" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold mono uppercase tracking-widest mb-8">
+    <main class="relative z-10 w-full max-w-[1400px] mx-auto px-4 pt-32 pb-24">
+        
+        <a href="/" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold mono uppercase tracking-widest mb-6">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
             Back to Store
         </a>
 
-        <div class="grid md:grid-cols-2 gap-12 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            <div class="premium-glass-panel p-2">
-                <div class="w-full aspect-square bg-black rounded-xl overflow-hidden relative flex items-center justify-center">
-                    {% if product.videoFiles.length > 0 %}
-                        <video src="{{ product.videoFiles[0] }}" class="w-full h-full object-cover" autoplay loop muted playsinline></video>
-                    {% elif product.mediaFiles.length > 0 %}
-                        <img src="{{ product.mediaFiles[0] }}" class="w-full h-full object-cover" alt="{{ product.Title }}">
-                    {% else %}
-                        <span class="text-slate-600 font-mono text-xs">NO MEDIA FOUND</span>
-                    {% endif %}
+            <div class="lg:col-span-8 flex flex-col gap-4 w-full">
+                
+                <div class="premium-glass-panel p-1 w-full relative bg-black">
+                    <div id="main-media-container" class="w-full aspect-video bg-[#0a0a0a] rounded-lg overflow-hidden relative flex items-center justify-center">
+                        
+                        {% for vid in product.videoFiles %}
+                            <div class="media-slide absolute inset-0 w-full h-full transition-opacity duration-300 {% if loop.index0 == 0 %}opacity-100 z-10{% else %}opacity-0 z-0 hidden{% endif %}" data-index="{{ loop.index0 }}" data-type="video">
+                                <video src="{{ vid }}" class="w-full h-full object-contain" controls controlsList="nodownload" {% if loop.index0 == 0 %}autoplay muted{% endif %}></video>
+                            </div>
+                        {% endfor %}
+
+                        {% for img in product.mediaFiles %}
+                            {% set globalIndex = loop.index0 + product.videoFiles.length %}
+                            <div class="media-slide absolute inset-0 w-full h-full transition-opacity duration-300 {% if globalIndex == 0 %}opacity-100 z-10{% else %}opacity-0 z-0 hidden{% endif %}" data-index="{{ globalIndex }}" data-type="image">
+                                <img src="{{ img }}" alt="{{ product.Title }}" class="w-full h-full object-contain">
+                            </div>
+                        {% endfor %}
+
+                        {% if product.videoFiles.length == 0 and product.mediaFiles.length == 0 %}
+                            <span class="text-slate-600 font-mono text-xs">NO MEDIA FOUND</span>
+                        {% endif %}
+                    </div>
                 </div>
+
+                {% set totalMedia = product.videoFiles.length + product.mediaFiles.length %}
+                {% if totalMedia > 1 %}
+                <div class="thumbnail-strip flex gap-2 overflow-x-auto hide-scroll pb-2 snap-x">
+                    
+                    {% for vid in product.videoFiles %}
+                        <div class="thumb cursor-pointer shrink-0 w-32 md:w-40 aspect-video bg-black rounded-lg border-[2px] transition-all snap-start relative overflow-hidden {% if loop.index0 == 0 %}border-[#00F0FF] opacity-100{% else %}border-transparent opacity-50 hover:opacity-100{% endif %}" data-target="{{ loop.index0 }}">
+                            <video src="{{ vid }}" class="w-full h-full object-cover pointer-events-none"></video>
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                <svg class="w-8 h-8 text-white opacity-80" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6z"/></svg>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    {% for img in product.mediaFiles %}
+                        {% set globalIndex = loop.index0 + product.videoFiles.length %}
+                        <div class="thumb cursor-pointer shrink-0 w-32 md:w-40 aspect-video bg-black rounded-lg border-[2px] transition-all snap-start overflow-hidden {% if globalIndex == 0 %}border-[#00F0FF] opacity-100{% else %}border-transparent opacity-50 hover:opacity-100{% endif %}" data-target="{{ globalIndex }}">
+                            <img src="{{ img }}" class="w-full h-full object-cover">
+                        </div>
+                    {% endfor %}
+
+                </div>
+                {% endif %}
             </div>
-            
-            <div class="flex flex-col h-full">
-                <div class="inline-flex w-fit items-center gap-2 px-3 py-1 border border-white/10 bg-white/5 backdrop-blur-md text-slate-300 text-[10px] font-bold mono tracking-widest rounded-full mb-4 uppercase">
-                    {{ product.Tag }}
-                </div>
+
+            <div class="lg:col-span-4 flex flex-col gap-6 sticky top-24">
                 
-                <h1 class="text-4xl md:text-5xl font-black text-white tracking-tighter drop-shadow-2xl mb-4">{{ product.Title }}</h1>
-                
-                <div class="flex items-center gap-4 mb-6 pb-6 border-b border-white/10">
-                    <span class="text-3xl font-bold text-blue-400 mono">{{ product.Price }}</span>
-                    {% if product.Type | lower == 'premium' %}
-                    <span class="bg-blue-500/20 text-blue-400 text-[10px] font-bold px-2 py-1 rounded border border-blue-500/30 uppercase tracking-wider">Premium Asset</span>
-                    {% endif %}
+                {% if product.mediaFiles.length > 0 %}
+                <img src="{{ product.mediaFiles[0] }}" class="w-full rounded-xl object-cover aspect-[4/3] shadow-2xl border border-white/5 hidden lg:block" alt="Capsule">
+                {% endif %}
+
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-black text-white tracking-tighter drop-shadow-2xl mb-3 leading-tight">{{ product.Title }}</h1>
+                    <div class="flex flex-wrap items-center gap-2 mb-2">
+                        <span class="px-2 py-1 bg-white/5 border border-white/10 rounded text-slate-300 text-[10px] font-bold mono uppercase">{{ product.Tag }}</span>
+                        {% if product.Type | lower == 'premium' %}
+                        <span class="px-2 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded text-[10px] font-bold uppercase">Premium Asset</span>
+                        {% endif %}
+                    </div>
                 </div>
 
-                <p class="text-slate-400 font-light leading-relaxed text-lg mb-8">{{ product.Description }}</p>
+                <p class="text-slate-400 font-light leading-relaxed text-sm bg-white/5 p-4 rounded-xl border border-white/5">
+                    {{ product.Description }}
+                </p>
 
-                <div class="mt-auto">
-                    <a href="{{ product.CheckoutURL }}" class="lemonsqueezy-button btn-action mb-4">
-                        {% if product.Type | lower == 'premium' %}Secure Checkout{% else %}Download Now{% endif %}
+                <div class="premium-glass-panel p-6 mt-4">
+                    <div class="flex items-end justify-between mb-6">
+                        <span class="text-slate-400 text-xs font-bold mono uppercase">Total Price</span>
+                        <span class="text-4xl font-black text-white tracking-tighter">{{ product.Price }}</span>
+                    </div>
+
+                    <a href="{{ product.CheckoutURL }}" class="lemonsqueezy-button btn-action mb-3">
+                        {% if product.Type | lower == 'premium' %}Add to Cart{% else %}Download Free{% endif %}
                     </a>
-                    <div class="flex items-center justify-center gap-2 text-slate-500 text-xs mono">
+
+                    <div class="flex items-center justify-center gap-2 text-slate-500 text-[10px] mono uppercase">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                         Secure Checkout via Lemon Squeezy
                     </div>
                 </div>
+
+                <div class="flex flex-col gap-2 text-xs mono text-slate-500 bg-[#0a0a0a] p-4 rounded-xl border border-white/5 mt-2">
+                    <div class="flex justify-between border-b border-white/5 pb-2">
+                        <span>Total Assets</span>
+                        <span class="text-slate-300">{{ product.mediaFiles.length + product.videoFiles.length }} Files</span>
+                    </div>
+                    <div class="flex justify-between border-b border-white/5 pb-2 pt-2">
+                        <span>Publisher</span>
+                        <span class="text-[#00F0FF]">SilenVault</span>
+                    </div>
+                    <div class="flex justify-between pt-2">
+                        <span>Platform</span>
+                        <span class="text-slate-300">Windows, Mac, Mobile</span>
+                    </div>
+                </div>
+
             </div>
         </div>
     </main>
 
     <sv-footer base-path="/"></sv-footer>
-    
+
     <script>
-        // Perfected Interactive Neural Canvas
+        // --- STEAM-STYLE MEDIA CONTROLLER ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.media-slide');
+            const thumbs = document.querySelectorAll('.thumb');
+            let currentIndex = 0;
+            let autoPlayTimer;
+
+            if (slides.length > 1) {
+                const updateMedia = (newIndex) => {
+                    // 1. Hide current slide and pause video if applicable
+                    const currentSlide = slides[currentIndex];
+                    currentSlide.classList.remove('opacity-100', 'z-10');
+                    currentSlide.classList.add('opacity-0', 'z-0', 'hidden');
+                    if (currentSlide.dataset.type === 'video') {
+                        currentSlide.querySelector('video').pause();
+                    }
+
+                    // 2. Remove active state from current thumb
+                    const currentThumb = thumbs[currentIndex];
+                    currentThumb.classList.remove('border-[#00F0FF]', 'opacity-100');
+                    currentThumb.classList.add('border-transparent', 'opacity-50');
+
+                    // 3. Update Index
+                    currentIndex = newIndex;
+
+                    // 4. Show new slide and play video if applicable
+                    const newSlide = slides[currentIndex];
+                    newSlide.classList.remove('opacity-0', 'z-0', 'hidden');
+                    newSlide.classList.add('opacity-100', 'z-10');
+                    if (newSlide.dataset.type === 'video') {
+                        newSlide.querySelector('video').play().catch(e => console.log("Autoplay blocked"));
+                    }
+
+                    // 5. Add active state to new thumb and scroll it into view
+                    const newThumb = thumbs[currentIndex];
+                    newThumb.classList.remove('border-transparent', 'opacity-50');
+                    newThumb.classList.add('border-[#00F0FF]', 'opacity-100');
+                    newThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                };
+
+                // Click event for thumbnails
+                thumbs.forEach((thumb, index) => {
+                    thumb.addEventListener('click', () => {
+                        clearInterval(autoPlayTimer); // Stop autoplay if user manually clicks
+                        if (currentIndex !== index) {
+                            updateMedia(index);
+                        }
+                    });
+                });
+
+                // Auto-advance logic (like Steam)
+                const startAutoPlay = () => {
+                    autoPlayTimer = setInterval(() => {
+                        // Don't auto-advance if a video is currently playing
+                        const currentSlide = slides[currentIndex];
+                        if (currentSlide.dataset.type === 'video') {
+                            const vid = currentSlide.querySelector('video');
+                            if (!vid.paused && !vid.ended) return; // Wait for video to finish
+                        }
+                        const nextIndex = (currentIndex + 1) % slides.length;
+                        updateMedia(nextIndex);
+                    }, 4000); // 4 seconds per image
+                };
+
+                startAutoPlay();
+            }
+        });
+
+        // --- BACKGROUND NEURAL CANVAS ---
         const canvas = document.getElementById('neural-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, particles = [], mouse = { x: null, y: null, radius: 150 };
 
         window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
         window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
-        window.addEventListener('touchmove', (e) => { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; });
-        window.addEventListener('touchend', () => { mouse.x = null; mouse.y = null; });
 
         function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; initParticles(); }
         window.addEventListener('resize', resize);

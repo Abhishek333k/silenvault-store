@@ -1,4 +1,3 @@
-
 node_modules/
 _site/
 .DS_Store
@@ -8,4 +7,3 @@ ai_renamer.py
 *.csv
 *_seo_log.csv
 *.zip
-
