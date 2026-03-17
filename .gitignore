@@ -1,3 +1,14 @@
-node_modules/
-_site/
 .DS_Store
+Thumbs.db
+node_modules/
+__pycache__/
+_site/
+.jekyll-cache/
+.DS_Store
+SEO Instructions.txt    
+# Backend Automation Scripts
+ai_renamer.py
+*.csv
+*_seo_log.csv
+*.zip
+temp_zip_build/
