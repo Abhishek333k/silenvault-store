@@ -149,17 +149,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 4. Advanced Debugger Trap
+   // 4. THE KILL SWITCH (DevTools Detection)
+    const triggerLockdown = () => {
+        document.body.innerHTML = `
+            <div style="background:#000000; color:#00F0FF; height:100vh; width:100vw; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:'Fira Code', monospace; z-index:999999; position:fixed; top:0; left:0; text-align:center;">
+                <svg style="width:80px; height:80px; margin-bottom:20px; color:#ef4444;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <h1 style="font-size:2rem; font-weight:900; margin-bottom:10px; color:#fff;">[ SYSTEM LOCKDOWN ]</h1>
+                <p style="font-size:1rem; color:#94a3b8;">Unauthorized inspector tools detected.<br>Session terminated to protect digital assets.</p>
+            </div>
+        `;
+    };
+
+    // Trigger 1: The Debugger Trap
     setInterval(function() {
         const start = performance.now();
         debugger; 
         const end = performance.now();
-        
         if (end - start > 100) {
-            console.clear();
-            console.log("%c SilenVault Security: Asset extraction logged.", "color: #00F0FF; font-size: 20px; font-weight: bold;");
+            triggerLockdown();
         }
     }, 2000);
+
+    // Trigger 2: Screen Dimension Anomaly (Detects when DevTools docks to the side/bottom)
+    window.addEventListener('resize', () => {
+        const widthDiff = window.outerWidth - window.innerWidth > 160;
+        const heightDiff = window.outerHeight - window.innerHeight > 160;
+        if (widthDiff || heightDiff) {
+            triggerLockdown();
+        }
+    });
 
 });
 

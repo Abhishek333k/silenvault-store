@@ -66,6 +66,13 @@ permalink: "item/{{ product.ID }}/index.html"
             z-index: 50;
             background: transparent;
         }
+        /* THE NO-JS ARMOR */
+        .untouchable-artwork {
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+            pointer-events: none; /* The mouse physically ignores this element */
+        }
         body { font-family: 'Inter', sans-serif; background-color: #000000; color: #f8fafc; margin: 0; min-height: 100vh; overflow-x: hidden; }
         .mono { font-family: 'Fira Code', monospace; }
         .cinematic-bg { position: fixed; inset: 0; z-index: -2; background-color: #02040a; overflow: hidden; }
@@ -110,12 +117,11 @@ permalink: "item/{{ product.ID }}/index.html"
 
                         {% for img in product.mediaFiles %}
                             {% set globalIndex = loop.index0 + product.videoFiles.length %}
-                            
-                            <div class="media-slide absolute inset-0 w-full h-full transition-opacity duration-300 {% if globalIndex == 0 %}opacity-100 z-10{% else %}opacity-0 z-0 hidden{% endif %} bg-no-repeat bg-center bg-contain" 
-                                style="background-image: url('{{ img }}');" 
-                                data-index="{{ globalIndex }}" data-type="image">
-                                
-                                <img src="/watermark.png" alt="Protected by SilenVault" class="w-full h-full object-cover opacity-0 cursor-not-allowed" oncontextmenu="return false;">
+                            <div class="media-slide untouchable-artwork absolute inset-0 w-full h-full transition-opacity duration-300 {% if globalIndex == 0 %}opacity-100 z-10{% else %}opacity-0 z-0 hidden{% endif %} bg-no-repeat bg-center bg-contain" 
+                                 style="background-image: url('{{ img }}');" 
+                                 data-index="{{ globalIndex }}" data-type="image">
+                                 
+                                <img src="/watermark.png" alt="" class="w-full h-full object-cover opacity-0 cursor-default" style="pointer-events: auto;" oncontextmenu="return false;" draggable="false">
                             </div>
                         {% endfor %}
 

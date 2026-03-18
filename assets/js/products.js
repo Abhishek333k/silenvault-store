@@ -252,7 +252,9 @@ function renderGrid(containerId, products) {
                 </div>`;
         } else if (product.images && product.images.length > 0) {
             const imageTags = product.images.map((img, index) => 
-                `<img src="${img}" alt="${product.title}" class="slider-img ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'} absolute inset-0 w-full h-full object-cover transition-opacity duration-700">`
+                `<div class="slider-img ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'} absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-700" style="background-image: url('${img}');">
+                    <img src="/watermark.png" alt="" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer pointer-events-auto" oncontextmenu="return false;" draggable="false">
+                </div>`
             ).join('');
             
             const galleryIndicator = product.images.length > 1 
