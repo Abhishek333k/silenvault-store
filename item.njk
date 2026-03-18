@@ -73,7 +73,7 @@ permalink: "item/{{ product.ID }}/index.html"
                         
                         {% for vid in product.videoFiles %}
                             <div class="media-slide absolute inset-0 w-full h-full transition-opacity duration-300 {% if loop.index0 == 0 %}opacity-100 z-10{% else %}opacity-0 z-0 hidden{% endif %}" data-index="{{ loop.index0 }}" data-type="video">
-                                <video src="{{ vid }}" class="w-full h-full object-contain" controls controlsList="nodownload" {% if loop.index0 == 0 %}autoplay muted{% endif %}></video>
+                                <video src="{{ vid }}" class="w-full h-full object-contain cursor-pointer" controlsList="nodownload" {% if loop.index0 == 0 %}autoplay muted{% endif %}></video>
                             </div>
                         {% endfor %}
 
@@ -201,8 +201,18 @@ permalink: "item/{{ product.ID }}/index.html"
                     const newSlide = slides[currentIndex];
                     newSlide.classList.remove('opacity-0', 'z-0', 'hidden');
                     newSlide.classList.add('opacity-100', 'z-10');
+                    // Inside your updateMedia function, when showing a video:
                     if (newSlide.dataset.type === 'video') {
-                        newSlide.querySelector('video').play().catch(e => console.log("Autoplay blocked"));
+                        const vid = newSlide.querySelector('video');
+                        vid.muted = true; // Must start muted to autoplay
+                        vid.play().catch(e => console.log("Autoplay blocked"));
+                        
+                        // Add a click-to-unmute Steam-style behavior
+                        vid.addEventListener('click', function unmuteHandler() {
+                            vid.muted = false;
+                            vid.controls = true; // Reveal full controls once they engage
+                            vid.removeEventListener('click', unmuteHandler);
+                        }, { once: true });
                     }
 
                     // 5. Add active state to new thumb and scroll it into view

@@ -32,7 +32,8 @@ async function fetchAndRenderProducts() {
         // We must await the folder scanning for all products before rendering
         const products = await Promise.all(productsRaw.map(async (p) => {
             const files = await scanDirectory(p.folderPath);
-            p.videos = files.filter(f => f.endsWith('.mp4') || f.endsWith('.webm'));
+            // Block videos from loading on the main product cards
+            // p.videos = files.filter(f => f.endsWith('.mp4') || f.endsWith('.webm'));
             p.images = files.filter(f => f.endsWith('.webp') || f.endsWith('.jpg') || f.endsWith('.jpeg') || f.endsWith('.png') || f.endsWith('.gif'));
             return p;
         }));
@@ -108,7 +109,7 @@ function renderGrid(containerId, products) {
         return;
     }
 
-    // --- PRODUCT GENERATION LOOP (You accidentally deleted this part!) ---
+    // --- PRODUCT GENERATION LOOP ---
     grid.innerHTML = products.map(product => {
         const isPremium = product.type.toLowerCase() === 'premium';
         let mediaHtml = '';
@@ -176,19 +177,22 @@ function renderGrid(containerId, products) {
         }
 
         return `
-            <div onclick="window.location.href='/item/${product.id}/'" class="cursor-pointer premium-glass-card group flex flex-col h-full bg-[rgba(255,255,255,0.02)] backdrop-blur-[24px] border border-white/5 rounded-2xl overflow-hidden transition-all duration-400 hover:border-white/20 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+            <div onclick="window.location.href='/item/${product.id}/'" class="cursor-pointer premium-glass-card group flex flex-col h-full bg-[rgba(255,255,255,0.02)] backdrop-blur-[24px] border border-white/5 rounded-2xl overflow-hidden transition-all duration-400 hover:border-white/20 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] product-card" data-tag="${product.tag.toLowerCase()}">
                 <div class="card-media relative w-full h-56 bg-black border-b border-white/5 flex-shrink-0">
                     ${mediaHtml}
                     ${badgeHtml}
                     <div class="absolute top-4 left-4 z-30 bg-black/60 text-slate-200 text-[9px] font-bold px-2 py-1 rounded border border-white/10 uppercase tracking-widest backdrop-blur-md pointer-events-none">
                         ${product.tag}
                     </div>
+                    
                 </div>
                 <div class="p-6 flex flex-col flex-1">
                     <h2 class="text-xl font-bold text-white mb-2 tracking-tight">${product.title}</h2>
                     <p class="text-sm text-slate-400 mb-6 flex-1 font-light leading-relaxed">
                         ${product.description}
+                        
                     </p>
+                    
                     <div class="flex items-center justify-between border-t border-white/10 pt-5 mt-auto">
                         <div class="flex flex-col">
                             <span class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Price</span>
@@ -206,7 +210,18 @@ function renderGrid(containerId, products) {
 
 // 4. LOGIC: MULTI-IMAGE HOVER
 function initImageSliders() {
-    document.querySelectorAll('.slider-container').forEach(container => {
+    // Only target sliders inside product cards
+    document.querySelectorAll('.product-card').forEach(card => {
+        const productTag = card.getAttribute('data-tag') || '';
+        
+        // If it's NOT a wallpaper, stop immediately.
+        if (!productTag.includes('wallpaper')) {
+            return; 
+        }
+
+        const container = card.querySelector('.slider-container');
+        if (!container) return;
+
         const imageCount = parseInt(container.getAttribute('data-images'));
         if (imageCount <= 1) return; 
 
@@ -214,7 +229,7 @@ function initImageSliders() {
         let currentIndex = 0;
         let interval;
 
-        container.addEventListener('mouseenter', () => {
+        card.addEventListener('mouseenter', () => {
             interval = setInterval(() => {
                 images[currentIndex].classList.remove('opacity-100', 'z-10');
                 images[currentIndex].classList.add('opacity-0', 'z-0');
@@ -224,7 +239,7 @@ function initImageSliders() {
             }, 1500); 
         });
 
-        container.addEventListener('mouseleave', () => {
+        card.addEventListener('mouseleave', () => {
             clearInterval(interval);
             images[currentIndex].classList.remove('opacity-100', 'z-10');
             images[currentIndex].classList.add('opacity-0', 'z-0');
