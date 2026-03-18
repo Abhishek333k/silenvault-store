@@ -13,6 +13,17 @@ permalink: "item/{{ product.ID }}/index.html"
     <title>{{ product.Title }} | SilenVault Store</title>
     <meta name="description" content="{{ product.Description }}">
     
+    <meta property="og:title" content="{{ product.Title }} | SilenVault">
+    <meta property="og:description" content="{{ product.Description }}">
+    <meta property="og:type" content="product">
+    <meta property="og:url" content="https://silenvault.com/item/{{ product.ID }}/">
+    {% if product.mediaFiles.length > 0 %}
+    <meta property="og:image" content="https://silenvault.com{{ product.mediaFiles[0] }}">
+    <meta name="twitter:image" content="https://silenvault.com{{ product.mediaFiles[0] }}">
+    {% endif %}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#00F0FF">
+    
     <script type="application/ld+json">
     {
         "@context": "https://schema.org/",
@@ -73,7 +84,7 @@ permalink: "item/{{ product.ID }}/index.html"
                         
                         {% for vid in product.videoFiles %}
                             <div class="media-slide absolute inset-0 w-full h-full transition-opacity duration-300 {% if loop.index0 == 0 %}opacity-100 z-10{% else %}opacity-0 z-0 hidden{% endif %}" data-index="{{ loop.index0 }}" data-type="video">
-                                <video src="{{ vid }}" class="w-full h-full object-contain cursor-pointer" controlsList="nodownload" {% if loop.index0 == 0 %}autoplay muted{% endif %}></video>
+                                <video src="{{ vid }}" class="w-full h-full object-contain cursor-pointer" controlsList="nodownload" playsinline webkit-playsinline {% if loop.index0 == 0 %}autoplay muted{% endif %}></video>
                             </div>
                         {% endfor %}
 
@@ -96,7 +107,7 @@ permalink: "item/{{ product.ID }}/index.html"
                     
                     {% for vid in product.videoFiles %}
                         <div class="thumb cursor-pointer shrink-0 w-32 md:w-40 aspect-video bg-black rounded-lg border-[2px] transition-all snap-start relative overflow-hidden {% if loop.index0 == 0 %}border-[#00F0FF] opacity-100{% else %}border-transparent opacity-50 hover:opacity-100{% endif %}" data-target="{{ loop.index0 }}">
-                            <video src="{{ vid }}" class="w-full h-full object-cover pointer-events-none"></video>
+                            <video src="{{ vid }}" class="w-full h-full object-cover pointer-events-none" playsinline></video>
                             <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
                                 <svg class="w-8 h-8 text-white opacity-80" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6z"/></svg>
                             </div>
@@ -130,9 +141,19 @@ permalink: "item/{{ product.ID }}/index.html"
                     </div>
                 </div>
 
-                <p class="text-slate-400 font-light leading-relaxed text-sm bg-white/5 p-4 rounded-xl border border-white/5">
-                    {{ product.Description }}
-                </p>
+                <div class="text-slate-400 font-light leading-relaxed text-sm bg-white/5 p-4 rounded-xl border border-white/5 flex flex-col gap-3">
+                    <p>{{ product.Description }}</p>
+                    
+                    {% if product.SmartTags %}
+                    <div class="flex flex-wrap gap-1.5 pt-2 border-t border-white/5">
+                        {% for tag in product.SmartTags.split(',') %}
+                            {% if tag | trim | length > 0 %}
+                            <span class="px-2 py-0.5 bg-black/40 border border-white/10 rounded text-[9px] uppercase tracking-wider text-slate-500">{{ tag | trim }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
 
                 <div class="premium-glass-panel p-6 mt-4">
                     <div class="flex items-end justify-between mb-6">
@@ -181,7 +202,6 @@ permalink: "item/{{ product.ID }}/index.html"
 
             if (slides.length > 1) {
                 const updateMedia = (newIndex) => {
-                    // 1. Hide current slide and pause video if applicable
                     const currentSlide = slides[currentIndex];
                     currentSlide.classList.remove('opacity-100', 'z-10');
                     currentSlide.classList.add('opacity-0', 'z-0', 'hidden');
@@ -189,61 +209,53 @@ permalink: "item/{{ product.ID }}/index.html"
                         currentSlide.querySelector('video').pause();
                     }
 
-                    // 2. Remove active state from current thumb
                     const currentThumb = thumbs[currentIndex];
                     currentThumb.classList.remove('border-[#00F0FF]', 'opacity-100');
                     currentThumb.classList.add('border-transparent', 'opacity-50');
 
-                    // 3. Update Index
                     currentIndex = newIndex;
 
-                    // 4. Show new slide and play video if applicable
                     const newSlide = slides[currentIndex];
                     newSlide.classList.remove('opacity-0', 'z-0', 'hidden');
                     newSlide.classList.add('opacity-100', 'z-10');
-                    // Inside your updateMedia function, when showing a video:
+                    
                     if (newSlide.dataset.type === 'video') {
                         const vid = newSlide.querySelector('video');
-                        vid.muted = true; // Must start muted to autoplay
+                        vid.muted = true; 
                         vid.play().catch(e => console.log("Autoplay blocked"));
                         
-                        // Add a click-to-unmute Steam-style behavior
                         vid.addEventListener('click', function unmuteHandler() {
                             vid.muted = false;
-                            vid.controls = true; // Reveal full controls once they engage
+                            vid.controls = true; 
                             vid.removeEventListener('click', unmuteHandler);
                         }, { once: true });
                     }
 
-                    // 5. Add active state to new thumb and scroll it into view
                     const newThumb = thumbs[currentIndex];
                     newThumb.classList.remove('border-transparent', 'opacity-50');
                     newThumb.classList.add('border-[#00F0FF]', 'opacity-100');
                     newThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                 };
 
-                // Click event for thumbnails
                 thumbs.forEach((thumb, index) => {
                     thumb.addEventListener('click', () => {
-                        clearInterval(autoPlayTimer); // Stop autoplay if user manually clicks
+                        clearInterval(autoPlayTimer); 
                         if (currentIndex !== index) {
                             updateMedia(index);
                         }
                     });
                 });
 
-                // Auto-advance logic (like Steam)
                 const startAutoPlay = () => {
                     autoPlayTimer = setInterval(() => {
-                        // Don't auto-advance if a video is currently playing
                         const currentSlide = slides[currentIndex];
                         if (currentSlide.dataset.type === 'video') {
                             const vid = currentSlide.querySelector('video');
-                            if (!vid.paused && !vid.ended) return; // Wait for video to finish
+                            if (!vid.paused && !vid.ended) return; 
                         }
                         const nextIndex = (currentIndex + 1) % slides.length;
                         updateMedia(nextIndex);
-                    }, 4000); // 4 seconds per image
+                    }, 4000); 
                 };
 
                 startAutoPlay();

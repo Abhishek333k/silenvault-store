@@ -1,14 +1,26 @@
 /**
  * SilenVault Digital Store - Dynamic Engine
- * Features: Google Sheets CMS, GitHub API Folder Scanning, Custom Video Player, Empty States
+ * Features: Categories, Fuse.js Smart Search, Instant Skeletons, Custom Empty States
  */
 
 const SHEET_ID = '1VvnEPxq42uf_ZJGLmTIpvJXs3J0tF2gYEh49NT47ZBw'; 
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&t=${new Date().getTime()}`;
-const REPO_PATH = 'Abhishek333k/silenvault-store'; // Used for dynamic folder scanning
+const REPO_PATH = 'Abhishek333k/silenvault-store'; 
+
+// Global Storage for filtering and search
+let allProducts = [];
+let fuse; // The Search Engine
 
 // 1. MAIN FETCH & RENDER LOOP
 async function fetchAndRenderProducts() {
+    const freeGrid = document.getElementById('free-product-grid');
+    const premiumGrid = document.getElementById('premium-product-grid');
+    
+    // INSTANT LOADING SKELETONS
+    const loaderHTML = `<div class="col-span-full flex flex-col items-center justify-center py-20"><div class="w-8 h-8 border-2 border-[#00F0FF] border-t-transparent rounded-full animate-spin mb-4"></div><span class="mono text-xs text-[#00F0FF] tracking-widest uppercase">Loading Products...</span></div>`;
+    if(freeGrid) freeGrid.innerHTML = loaderHTML;
+    if(premiumGrid) premiumGrid.innerHTML = loaderHTML;
+
     try {
         const response = await fetch(SHEET_URL);
         const text = await response.text();
@@ -23,48 +35,139 @@ async function fetchAndRenderProducts() {
                 description: row.c[3] ? row.c[3].v : '',
                 price: row.c[4] ? row.c[4].v : 'FREE',
                 type: row.c[5] ? row.c[5].v : 'Free',
-                tag: row.c[6] ? row.c[6].v : 'Asset',
-                folderPath: row.c[7] ? row.c[7].v : '', // This is a folder path (e.g. assets/products/pack-01)
-                checkoutUrl: row.c[8] ? row.c[8].v : '#'
+                tag: row.c[6] ? row.c[6].v : 'Asset', // Used for Main UI Category Buttons
+                folderPath: row.c[7] ? row.c[7].v : '',
+                checkoutUrl: row.c[8] ? row.c[8].v : '#',
+                smartTags: row.c[9] ? row.c[9].v : '' // Hidden metadata used ONLY by Fuse.js
             };
         }).filter(p => p.id !== '' && p.status.toLowerCase() === 'published');
 
-        // We must await the folder scanning for all products before rendering
-        const products = await Promise.all(productsRaw.map(async (p) => {
+        allProducts = await Promise.all(productsRaw.map(async (p) => {
             const files = await scanDirectory(p.folderPath);
-            // Block videos from loading on the main product cards
-            // p.videos = files.filter(f => f.endsWith('.mp4') || f.endsWith('.webm'));
             p.images = files.filter(f => f.endsWith('.webp') || f.endsWith('.jpg') || f.endsWith('.jpeg') || f.endsWith('.png') || f.endsWith('.gif'));
             return p;
         }));
 
-        const freeProducts = products.filter(p => p.type.toLowerCase() === 'free');
-        const premiumProducts = products.filter(p => p.type.toLowerCase() === 'premium');
-
-        renderGrid('free-product-grid', freeProducts);
-        renderGrid('premium-product-grid', premiumProducts);
-
-        initImageSliders();
-        initCustomVideoPlayers();
-
-        if (window.createLemonSqueezy) {
-            window.createLemonSqueezy();
+        // Initialize Fuse.js Search Engine
+        if (typeof Fuse !== 'undefined') {
+            fuse = new Fuse(allProducts, {
+                keys: [
+                    { name: 'title', weight: 0.5 },
+                    { name: 'smartTags', weight: 0.3 },
+                    { name: 'description', weight: 0.2 }
+                ],
+                threshold: 0.3, // Allows slight typos
+                ignoreLocation: true
+            });
         }
+
+        // Build the broad Category Sidebar
+        buildCategoryBar();
+        
+        // Render initial view (All)
+        filterAndRender('all');
+
+        // Setup the real-time search listener
+        setupSearchListener();
+
+        if (window.createLemonSqueezy) window.createLemonSqueezy();
 
     } catch (error) {
         console.error("Database sync failed:", error);
-        document.getElementById('free-product-grid').innerHTML = '<div class="col-span-full text-center text-red-500 mono font-bold">DATABASE SYNC FAILED.</div>';
+        if(freeGrid) freeGrid.innerHTML = '<div class="col-span-full text-center text-red-500 mono font-bold">DATABASE SYNC FAILED.</div>';
     }
 }
 
-// 2. GITHUB API DIRECTORY SCANNER (With Session Cache)
+// 2. SEARCH LISTENER
+function setupSearchListener() {
+    const searchInput = document.getElementById('store-search');
+    if(!searchInput) return;
+
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+        
+        // Reset category UI buttons to "All" when user starts typing a search
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('border-[#00F0FF]', 'bg-[#00F0FF]/10', 'text-[#00F0FF]');
+            btn.classList.add('border-white/20', 'bg-white/5', 'text-slate-300');
+            if (btn.innerText === 'ALL CATEGORIES') {
+                btn.classList.add('border-[#00F0FF]', 'bg-[#00F0FF]/10', 'text-[#00F0FF]');
+            }
+        });
+
+        if (query === '') {
+            renderProductArrays(allProducts);
+        } else if (fuse) {
+            // Fuzzy search across Title, Description, and SmartTags
+            const results = fuse.search(query).map(result => result.item);
+            renderProductArrays(results);
+        }
+    });
+}
+
+// 3. CATEGORY BUILDER (Clean Navigation based on Column 7)
+function buildCategoryBar() {
+    const filterContainer = document.getElementById('category-filters');
+    if (!filterContainer) return;
+
+    let uniqueCategories = new Set();
+    allProducts.forEach(p => {
+        if (p.tag) {
+            uniqueCategories.add(p.tag.trim());
+        }
+    });
+
+    let buttonsHTML = `<button onclick="filterAndRender('all')" class="filter-btn active-filter px-4 py-1.5 rounded-full border border-[#00F0FF] bg-[#00F0FF]/10 text-[#00F0FF] text-[10px] font-bold uppercase mono transition-all hover:bg-[#00F0FF]/20">ALL CATEGORIES</button>`;
+    
+    uniqueCategories.forEach(cat => {
+        if(cat.length > 1) { 
+            buttonsHTML += `<button onclick="filterAndRender('${cat}')" class="filter-btn px-4 py-1.5 rounded-full border border-white/20 bg-white/5 text-slate-300 text-[10px] font-bold uppercase mono transition-all hover:bg-white/10 hover:border-white/40" data-cat="${cat}">${cat}</button>`;
+        }
+    });
+
+    filterContainer.innerHTML = buttonsHTML;
+}
+
+// 4. CATEGORY FILTER LOGIC
+window.filterAndRender = function(selectedCat) {
+    const searchInput = document.getElementById('store-search');
+    if(searchInput) searchInput.value = '';
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('border-[#00F0FF]', 'bg-[#00F0FF]/10', 'text-[#00F0FF]');
+        btn.classList.add('border-white/20', 'bg-white/5', 'text-slate-300');
+        
+        if (selectedCat === 'all' && btn.innerText === 'ALL CATEGORIES') {
+            btn.classList.add('border-[#00F0FF]', 'bg-[#00F0FF]/10', 'text-[#00F0FF]');
+        } else if (btn.getAttribute('data-cat') === selectedCat) {
+            btn.classList.add('border-[#00F0FF]', 'bg-[#00F0FF]/10', 'text-[#00F0FF]');
+        }
+    });
+
+    let filteredProducts = allProducts;
+    if (selectedCat !== 'all') {
+        filteredProducts = allProducts.filter(p => p.tag.toLowerCase() === selectedCat.toLowerCase());
+    }
+
+    renderProductArrays(filteredProducts);
+};
+
+// Helper function to render arrays
+function renderProductArrays(productsArray) {
+    const freeProducts = productsArray.filter(p => p.type.toLowerCase() === 'free');
+    const premiumProducts = productsArray.filter(p => p.type.toLowerCase() === 'premium');
+
+    renderGrid('free-product-grid', freeProducts);
+    renderGrid('premium-product-grid', premiumProducts);
+    
+    initImageSliders();
+    initCustomVideoPlayers();
+}
+
+// 5. GITHUB API DIRECTORY SCANNER
 async function scanDirectory(folderPath) {
-    if (!folderPath || !folderPath.includes('/')) return []; // Not a valid path
-    
-    // Clean trailing slashes
+    if (!folderPath || !folderPath.includes('/')) return []; 
     folderPath = folderPath.replace(/\/$/, '');
-    
-    // Check Cache to prevent GitHub API Rate Limiting
     const cacheKey = `sv_dir_${folderPath}`;
     const cached = sessionStorage.getItem(cacheKey);
     if (cached) return JSON.parse(cached);
@@ -72,33 +175,33 @@ async function scanDirectory(folderPath) {
     try {
         const apiUrl = `https://api.github.com/repos/${REPO_PATH}/contents/${folderPath}`;
         const res = await fetch(apiUrl);
-        if (!res.ok) return []; // Folder not found or empty
-        
+        if (!res.ok) return []; 
         const data = await res.json();
-        // Extract filenames and reconstruct the local path
         const files = data.filter(item => item.type === 'file').map(item => `/${folderPath}/${item.name}`);
-        
         sessionStorage.setItem(cacheKey, JSON.stringify(files));
         return files;
     } catch (e) {
-        console.error(`Failed to scan folder: ${folderPath}`, e);
         return [];
     }
 }
 
-// 3. RENDER UI GRID
+// 6. RENDER UI GRID
 function renderGrid(containerId, products) {
     const grid = document.getElementById(containerId);
     if (!grid) return;
 
-    // --- EMPTY STATE LOGIC ---
+    // --- RESTORED: EMPTY STATE LOGIC WITH FLASK ICON ---
     if (products.length === 0) {
-        let emptyMessage = "New assets arriving soon. Stay tuned.";
+        let emptyMessage = "No assets match your search criteria.";
         
-        if (containerId === 'premium-product-grid') {
-            emptyMessage = "Premium collection currently in development. Check back soon.";
-        } else if (containerId === 'free-product-grid') {
-            emptyMessage = "Free resources are currently being updated. Check back soon.";
+        // Only show "under development" if the search bar is empty
+        const searchInput = document.getElementById('store-search');
+        if (!searchInput || searchInput.value.trim() === '') {
+            if (containerId === 'premium-product-grid') {
+                emptyMessage = "Premium collection currently in development. Check back soon.";
+            } else if (containerId === 'free-product-grid') {
+                emptyMessage = "Free resources are currently being updated. Check back soon.";
+            }
         }
 
         grid.innerHTML = `
@@ -109,23 +212,15 @@ function renderGrid(containerId, products) {
         return;
     }
 
-    // --- PRODUCT GENERATION LOOP ---
     grid.innerHTML = products.map(product => {
         const isPremium = product.type.toLowerCase() === 'premium';
         let mediaHtml = '';
 
-        // UI Tagging
         const badgeHtml = isPremium 
-            ? `<div class="absolute top-4 right-4 z-30 bg-blue-500/10 text-blue-400 text-[10px] font-bold px-2 py-1 rounded border border-blue-500/20 uppercase tracking-wider flex items-center gap-1 backdrop-blur-md">
-                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2l5 5-5 11-5-11 5-5z"/></svg> PREMIUM
-               </div>`
-            : `<div class="absolute top-4 right-4 z-30 bg-white/10 text-white text-[9px] font-bold px-2 py-1 rounded border border-white/20 uppercase tracking-wider mono backdrop-blur-md">
-                 FREE
-               </div>`;
+            ? `<div class="absolute top-4 right-4 z-30 bg-blue-500/10 text-blue-400 text-[10px] font-bold px-2 py-1 rounded border border-blue-500/20 uppercase tracking-wider flex items-center gap-1 backdrop-blur-md"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2l5 5-5 11-5-11 5-5z"/></svg> PREMIUM</div>`
+            : `<div class="absolute top-4 right-4 z-30 bg-white/10 text-white text-[9px] font-bold px-2 py-1 rounded border border-white/20 uppercase tracking-wider mono backdrop-blur-md">FREE</div>`;
 
-        // BUILD MEDIA CONTAINER (Video takes priority, else images, else fallback)
         if (product.videos && product.videos.length > 0) {
-            // Render Premium Custom Video Player
             mediaHtml = `
                 <div class="custom-video-wrapper w-full h-full relative group">
                     <video src="${product.videos[0]}" class="w-full h-full object-cover" playsinline preload="metadata" loop></video>
@@ -156,7 +251,6 @@ function renderGrid(containerId, products) {
                     </div>
                 </div>`;
         } else if (product.images && product.images.length > 0) {
-            // Render Image Hover Slider
             const imageTags = product.images.map((img, index) => 
                 `<img src="${img}" alt="${product.title}" class="slider-img ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'} absolute inset-0 w-full h-full object-cover transition-opacity duration-700">`
             ).join('');
@@ -172,9 +266,11 @@ function renderGrid(containerId, products) {
                     ${galleryIndicator}
                 </div>`;
         } else {
-            // Fallback No Media
             mediaHtml = `<div class="w-full h-full bg-slate-900 flex items-center justify-center text-slate-600 text-xs mono">NO MEDIA FOUND</div>`;
         }
+
+        // --- INJECT MAX 3 SMART TAGS INTO CARD FOR CLEAN UX ---
+        const tagBadges = product.smartTags ? product.smartTags.split(',').slice(0,3).map(t => `<span class="bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-[8px] uppercase">${t.trim()}</span>`).join('') : '';
 
         return `
             <div onclick="window.location.href='/item/${product.id}/'" class="cursor-pointer premium-glass-card group flex flex-col h-full bg-[rgba(255,255,255,0.02)] backdrop-blur-[24px] border border-white/5 rounded-2xl overflow-hidden transition-all duration-400 hover:border-white/20 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] product-card" data-tag="${product.tag.toLowerCase()}">
@@ -184,14 +280,14 @@ function renderGrid(containerId, products) {
                     <div class="absolute top-4 left-4 z-30 bg-black/60 text-slate-200 text-[9px] font-bold px-2 py-1 rounded border border-white/10 uppercase tracking-widest backdrop-blur-md pointer-events-none">
                         ${product.tag}
                     </div>
-                    
                 </div>
                 <div class="p-6 flex flex-col flex-1">
                     <h2 class="text-xl font-bold text-white mb-2 tracking-tight">${product.title}</h2>
-                    <p class="text-sm text-slate-400 mb-6 flex-1 font-light leading-relaxed">
-                        ${product.description}
-                        
-                    </p>
+                    <p class="text-sm text-slate-400 mb-4 flex-1 font-light leading-relaxed line-clamp-2">${product.description}</p>
+                    
+                    <div class="flex flex-wrap gap-1 mb-4">
+                        ${tagBadges}
+                    </div>
                     
                     <div class="flex items-center justify-between border-t border-white/10 pt-5 mt-auto">
                         <div class="flex flex-col">
@@ -205,19 +301,14 @@ function renderGrid(containerId, products) {
                 </div>
             </div>
         `;
-    }).join(''); // --- END OF PRODUCT GENERATION LOOP ---
+    }).join('');
 }
 
-// 4. LOGIC: MULTI-IMAGE HOVER
+// 7. LOGIC: MULTI-IMAGE HOVER
 function initImageSliders() {
-    // Only target sliders inside product cards
     document.querySelectorAll('.product-card').forEach(card => {
         const productTag = card.getAttribute('data-tag') || '';
-        
-        // If it's NOT a wallpaper, stop immediately.
-        if (!productTag.includes('wallpaper')) {
-            return; 
-        }
+        if (!productTag.includes('wallpaper')) return; 
 
         const container = card.querySelector('.slider-container');
         if (!container) return;
@@ -236,7 +327,7 @@ function initImageSliders() {
                 currentIndex = (currentIndex + 1) % imageCount;
                 images[currentIndex].classList.remove('opacity-0', 'z-0');
                 images[currentIndex].classList.add('opacity-100', 'z-10');
-            }, 1500); 
+            }, 3000); 
         });
 
         card.addEventListener('mouseleave', () => {
@@ -250,7 +341,7 @@ function initImageSliders() {
     });
 }
 
-// 5. LOGIC: CUSTOM VIDEO PLAYER
+// 8. LOGIC: CUSTOM VIDEO PLAYER
 function initCustomVideoPlayers() {
     document.querySelectorAll('.custom-video-wrapper').forEach(wrapper => {
         const video = wrapper.querySelector('video');
@@ -265,7 +356,6 @@ function initCustomVideoPlayers() {
         const progressContainer = wrapper.querySelector('.progress-container');
         const fullscreenBtn = wrapper.querySelector('.fullscreen-btn');
 
-        // Play/Pause Logic
         const togglePlay = () => {
             if (video.paused) {
                 video.play();
@@ -284,7 +374,6 @@ function initCustomVideoPlayers() {
         playPauseBtn.addEventListener('click', togglePlay);
         video.addEventListener('click', togglePlay);
 
-        // Mute/Unmute Logic
         muteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             video.muted = !video.muted;
@@ -297,13 +386,11 @@ function initCustomVideoPlayers() {
             }
         });
 
-        // Progress Bar Update
         video.addEventListener('timeupdate', () => {
             const percent = (video.currentTime / video.duration) * 100;
             progressBar.style.width = `${percent}%`;
         });
 
-        // Click to seek
         progressContainer.addEventListener('click', (e) => {
             e.stopPropagation();
             const rect = progressContainer.getBoundingClientRect();
@@ -311,7 +398,6 @@ function initCustomVideoPlayers() {
             video.currentTime = pos * video.duration;
         });
 
-        // Fullscreen
         fullscreenBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (video.requestFullscreen) video.requestFullscreen();

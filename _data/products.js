@@ -13,7 +13,7 @@ module.exports = async function() {
         const response = await fetch(CSV_URL);
         const csvText = await response.text();
 
-        // Parse the CSV
+        // Parse the CSV - This automatically pulls the new "SmartTags" column!
         const rows = parse(csvText, { columns: true, skip_empty_lines: true });
 
         const publishedProducts = rows.filter(row => 
