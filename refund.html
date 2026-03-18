@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Policy | SilenVault</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <script src="/assets/js/layout.js" defer></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #f8fafc; margin: 0; min-height: 100vh; overflow-x: hidden; }
+        .mono { font-family: 'Fira Code', monospace; }
+        .cinematic-bg { position: fixed; inset: 0; z-index: -2; background-color: #02040a; overflow: hidden; }
+        .cinematic-vignette { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at center, transparent 0%, #000000 100%), linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 80%, #000000 100%); }
+        .premium-glass-panel { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1rem; box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02); overflow: hidden; }
+        
+        /* Custom Legal Typography */
+        .legal-content h1 { font-size: 2.5rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem; letter-spacing: -0.025em; }
+        .legal-content h2 { font-size: 1.25rem; font-weight: 700; color: #00F0FF; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .legal-content p { color: #94a3b8; font-weight: 300; line-height: 1.75; margin-bottom: 1.25rem; font-size: 0.95rem; }
+        .legal-content ul { list-style-type: disc; padding-left: 1.5rem; color: #94a3b8; font-weight: 300; margin-bottom: 1.25rem; }
+        .legal-content li { margin-bottom: 0.5rem; }
+        .legal-content strong { color: #e2e8f0; font-weight: 500; }
+        .legal-content .date { color: #64748b; font-family: 'Fira Code', monospace; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2rem; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="cinematic-bg"><div class="cinematic-vignette"></div></div>
+
+    <sv-header base-path="/"></sv-header>
+
+    <main class="relative z-10 w-full max-w-4xl mx-auto px-4 pt-32 pb-24">
+        <a href="/" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold mono uppercase tracking-widest mb-6">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Back to Store
+        </a>
+
+        <div class="premium-glass-panel p-8 md:p-12 legal-content">
+            <h1>Refund Policy</h1>
+            <span class="date">Effective Date: March 18, 2026</span>
+
+            <p>At SilenVault, we stand behind the quality of our digital assets. However, due to the inherent nature of downloadable digital goods, we enforce a strict refund policy to protect our creators and our platform.</p>
+
+            <h2>1. All Sales are Final</h2>
+            <p>Because digital products cannot be "returned" once they are downloaded, <strong>all sales are considered final and non-refundable.</strong> By completing your purchase and downloading the asset files, you waive your right to a refund.</p>
+
+            <h2>2. Exceptions to the Rule</h2>
+            <p>We want you to be satisfied with your purchase. Refunds will ONLY be considered under the following highly specific circumstances:</p>
+            <ul>
+                <li><strong>Corrupted or Defective Files:</strong> The asset file is demonstrably broken, corrupted, or completely unusable, and our support team is unable to provide you with a working replacement within 48 hours of your report.</li>
+                <li><strong>Non-Delivery:</strong> You did not receive the download link due to a system error, and we are unable to manually deliver the files to your email.</li>
+                <li><strong>Duplicate Purchases:</strong> You accidentally purchased the exact same digital asset twice within a 24-hour period.</li>
+            </ul>
+
+            <h2>3. Merchant of Record Processing</h2>
+            <p>Our order process is conducted by our online reseller, Lemon Squeezy. Lemon Squeezy is the Merchant of Record for all our orders. If a refund is approved under our exceptions, Lemon Squeezy will process the return of funds to your original payment method. Depending on your bank, this can take 3-5 business days.</p>
+
+            <h2>4. How to Request Help</h2>
+            <p>If you believe your situation qualifies for an exception, please do not file a chargeback with your bank, as this will result in a permanent ban from SilenVault. Instead, contact us immediately at: <strong>support@silenvault.com</strong> with your Order ID and a detailed explanation of the issue.</p>
+        </div>
+    </main>
+
+    <sv-footer base-path="/"></sv-footer>
+
+</body>
+</html>

@@ -44,8 +44,28 @@ permalink: "item/{{ product.ID }}/index.html"
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
     <script src="/assets/js/layout.js" defer></script>
     <script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
+    <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group identify setPersonProperties setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags resetGroups onFeatureFlags addFeatureFlagsHandler onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_eLhbnCadVShO9SJsuqJ3KqJGssw3aeBRLYlcxmByvUx', {
+        api_host: 'https://us.i.posthog.com',
+        defaults: '2026-01-30'
+    })
+</script>
 
     <style>
+    /* Anti-Theft Overlay */
+        .asset-protect {
+            position: relative;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        .asset-protect::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 50;
+            background: transparent;
+        }
         body { font-family: 'Inter', sans-serif; background-color: #000000; color: #f8fafc; margin: 0; min-height: 100vh; overflow-x: hidden; }
         .mono { font-family: 'Fira Code', monospace; }
         .cinematic-bg { position: fixed; inset: 0; z-index: -2; background-color: #02040a; overflow: hidden; }
@@ -90,8 +110,12 @@ permalink: "item/{{ product.ID }}/index.html"
 
                         {% for img in product.mediaFiles %}
                             {% set globalIndex = loop.index0 + product.videoFiles.length %}
-                            <div class="media-slide absolute inset-0 w-full h-full transition-opacity duration-300 {% if globalIndex == 0 %}opacity-100 z-10{% else %}opacity-0 z-0 hidden{% endif %}" data-index="{{ globalIndex }}" data-type="image">
-                                <img src="{{ img }}" alt="{{ product.Title }}" class="w-full h-full object-contain">
+                            
+                            <div class="media-slide absolute inset-0 w-full h-full transition-opacity duration-300 {% if globalIndex == 0 %}opacity-100 z-10{% else %}opacity-0 z-0 hidden{% endif %} bg-no-repeat bg-center bg-contain" 
+                                style="background-image: url('{{ img }}');" 
+                                data-index="{{ globalIndex }}" data-type="image">
+                                
+                                <img src="/watermark.png" alt="Protected by SilenVault" class="w-full h-full object-cover opacity-0 cursor-not-allowed" oncontextmenu="return false;">
                             </div>
                         {% endfor %}
 
@@ -316,5 +340,6 @@ permalink: "item/{{ product.ID }}/index.html"
         }
         resize(); animate();
     </script>
+    
 </body>
 </html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | SilenVault</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <script src="/assets/js/layout.js" defer></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #f8fafc; margin: 0; min-height: 100vh; overflow-x: hidden; }
+        .mono { font-family: 'Fira Code', monospace; }
+        .cinematic-bg { position: fixed; inset: 0; z-index: -2; background-color: #02040a; overflow: hidden; }
+        .cinematic-vignette { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at center, transparent 0%, #000000 100%), linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 80%, #000000 100%); }
+        .premium-glass-panel { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1rem; box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02); overflow: hidden; }
+        
+        /* Custom Legal Typography */
+        .legal-content h1 { font-size: 2.5rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem; letter-spacing: -0.025em; }
+        .legal-content h2 { font-size: 1.25rem; font-weight: 700; color: #00F0FF; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .legal-content p { color: #94a3b8; font-weight: 300; line-height: 1.75; margin-bottom: 1.25rem; font-size: 0.95rem; }
+        .legal-content ul { list-style-type: disc; padding-left: 1.5rem; color: #94a3b8; font-weight: 300; margin-bottom: 1.25rem; }
+        .legal-content li { margin-bottom: 0.5rem; }
+        .legal-content strong { color: #e2e8f0; font-weight: 500; }
+        .legal-content .date { color: #64748b; font-family: 'Fira Code', monospace; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2rem; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="cinematic-bg"><div class="cinematic-vignette"></div></div>
+
+    <sv-header base-path="/"></sv-header>
+
+    <main class="relative z-10 w-full max-w-4xl mx-auto px-4 pt-32 pb-24">
+        <a href="/" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold mono uppercase tracking-widest mb-6">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Back to Store
+        </a>
+
+        <div class="premium-glass-panel p-8 md:p-12 legal-content">
+            <h1>Privacy Policy</h1>
+            <span class="date">Effective Date: March 18, 2026</span>
+
+            <p>Welcome to SilenVault. We respect your privacy and are committed to protecting the personal data you share with us. This policy outlines how we collect, use, and safeguard your information when you visit our website (silenvault.com) and purchase our digital assets.</p>
+
+            <h2>1. The Merchant of Record (Lemon Squeezy)</h2>
+            <p>SilenVault partners with Lemon Squeezy to process all transactions. Lemon Squeezy acts as the Merchant of Record (MoR) for all purchases on this site. </p>
+            <p>When you make a purchase or download a free asset, you are interacting securely with Lemon Squeezy's infrastructure. We do not collect, process, or store your credit card information or direct billing details. You can review Lemon Squeezy’s Privacy Policy here: <a href="https://www.lemonsqueezy.com/privacy" target="_blank" class="text-[#00F0FF] hover:underline">https://www.lemonsqueezy.com/privacy</a>.</p>
+
+            <h2>2. Information We Collect</h2>
+            <p>We collect minimal information necessary to deliver our digital products and improve your experience:</p>
+            <ul>
+                <li><strong>Contact Data:</strong> Your email address (collected via Lemon Squeezy) so we can send your digital download links and receipts.</li>
+                <li><strong>Usage Data:</strong> We use PostHog analytics to understand how users interact with our site (e.g., search terms used, buttons clicked). This data helps us build better assets. It is anonymized and does not track you across the wider internet.</li>
+            </ul>
+
+            <h2>3. How We Use Your Information</h2>
+            <p>We use your data solely for the following operational purposes:</p>
+            <ul>
+                <li>To deliver the digital assets you requested.</li>
+                <li>To provide customer support regarding your downloads.</li>
+                <li>To analyze store traffic and improve our website's user experience.</li>
+            </ul>
+
+            <h2>4. Data Sharing and Protection</h2>
+            <p>We do not sell, rent, or trade your personal information to third parties. Your email address is stored securely within our Merchant of Record's database and is only accessible to SilenVault administrators for the purpose of product delivery and support.</p>
+
+            <h2>5. Your Rights (GDPR & CCPA)</h2>
+            <p>Depending on your location, you have the right to request access to, correction of, or deletion of your personal data. Because your transaction data is processed by Lemon Squeezy, you may need to direct data deletion requests to them. For any inquiries regarding the data SilenVault holds (such as your email address on our support list), please contact us at: <strong>support@silenvault.com</strong>.</p>
+
+            <h2>6. Updates to This Policy</h2>
+            <p>We may update this Privacy Policy as our store evolves. Any changes will be posted on this page with an updated "Effective Date."</p>
+        </div>
+    </main>
+
+    <sv-footer base-path="/"></sv-footer>
+
+</body>
+</html>

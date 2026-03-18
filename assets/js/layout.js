@@ -92,8 +92,9 @@ class SVFooter extends HTMLElement {
                         <a href="${cleanAbout}" class="text-xs text-slate-500 hover:text-white transition-colors mono">About</a>
                         <a href="${cleanSponsor}" class="text-xs text-slate-500 hover:text-white transition-colors mono">Sponsor</a>
                         <a href="mailto:support@silenvault.com" class="text-xs text-slate-500 hover:text-white transition-colors mono">Support</a>
-                        <a href="${cleanLegal}#terms" class="text-xs text-slate-500 hover:text-white transition-colors mono">Terms</a>
-                        <a href="${cleanLegal}#privacy" class="text-xs text-slate-500 hover:text-white transition-colors mono">Privacy</a>
+                        <a href="/terms" class="text-xs text-slate-500 hover:text-white transition-colors mono">Terms of Service</a>
+                        <a href="/privacy" class="text-xs text-slate-500 hover:text-white transition-colors mono">Privacy Policy</a>
+                        <a href="/refund" class="text-xs text-slate-500 hover:text-white transition-colors mono">Refund Policy</a>
                     </div>
                 </div>
             </footer>
@@ -103,3 +104,62 @@ class SVFooter extends HTMLElement {
 
 customElements.define('sv-header', SVHeader);
 customElements.define('sv-footer', SVFooter);
+
+// ==========================================
+// SILENVAULT GLOBAL SECURITY ENGINE
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // 1. Block Right-Click Context Menu EVERYWHERE
+    document.addEventListener('contextmenu', event => {
+        event.preventDefault();
+    });
+
+    // 2. Block Dragging of images globally
+    document.addEventListener('dragstart', event => {
+        if (event.target.tagName === 'IMG') event.preventDefault();
+    });
+
+    // 3. Block DevTools Keyboard Shortcuts Globally
+    document.addEventListener('keydown', function(event) {
+        // Prevent F12 (Standard DevTools)
+        if (event.key === 'F12') {
+            event.preventDefault();
+            return false;
+        }
+        // Prevent Ctrl+Shift+I / Cmd+Option+I (Open Inspector)
+        if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'i') {
+            event.preventDefault();
+            return false;
+        }
+        // Prevent Ctrl+Shift+C / Cmd+Option+C (Inspect Element)
+        if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'c') {
+            event.preventDefault();
+            return false;
+        }
+        // Prevent Ctrl+Shift+J / Cmd+Option+J (Open Console)
+        if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'j') {
+            event.preventDefault();
+            return false;
+        }
+        // Prevent Ctrl+U / Cmd+U (View Page Source)
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'u') {
+            event.preventDefault();
+            return false;
+        }
+    });
+
+    // 4. Advanced Debugger Trap
+    setInterval(function() {
+        const start = performance.now();
+        debugger; 
+        const end = performance.now();
+        
+        if (end - start > 100) {
+            console.clear();
+            console.log("%c SilenVault Security: Asset extraction logged.", "color: #00F0FF; font-size: 20px; font-weight: bold;");
+        }
+    }, 2000);
+
+});
+

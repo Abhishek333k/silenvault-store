@@ -2,6 +2,7 @@ module.exports = function(eleventyConfig) {
     // Tell Eleventy to copy these exact folders/files to the final build
     eleventyConfig.addPassthroughCopy("assets");
     eleventyConfig.addPassthroughCopy("robots.txt");
+    eleventyConfig.addPassthroughCopy("watermark.png");
 
     // Custom Date Filter for the Sitemap
     eleventyConfig.addFilter("date", function() {

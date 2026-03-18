@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | SilenVault</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <script src="/assets/js/layout.js" defer></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #f8fafc; margin: 0; min-height: 100vh; overflow-x: hidden; }
+        .mono { font-family: 'Fira Code', monospace; }
+        .cinematic-bg { position: fixed; inset: 0; z-index: -2; background-color: #02040a; overflow: hidden; }
+        .cinematic-vignette { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at center, transparent 0%, #000000 100%), linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 80%, #000000 100%); }
+        .premium-glass-panel { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1rem; box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02); overflow: hidden; }
+        
+        /* Custom Legal Typography */
+        .legal-content h1 { font-size: 2.5rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem; letter-spacing: -0.025em; }
+        .legal-content h2 { font-size: 1.25rem; font-weight: 700; color: #00F0FF; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .legal-content p { color: #94a3b8; font-weight: 300; line-height: 1.75; margin-bottom: 1.25rem; font-size: 0.95rem; }
+        .legal-content ul { list-style-type: disc; padding-left: 1.5rem; color: #94a3b8; font-weight: 300; margin-bottom: 1.25rem; }
+        .legal-content li { margin-bottom: 0.5rem; }
+        .legal-content strong { color: #e2e8f0; font-weight: 500; }
+        .legal-content .date { color: #64748b; font-family: 'Fira Code', monospace; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2rem; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="cinematic-bg"><div class="cinematic-vignette"></div></div>
+
+    <sv-header base-path="/"></sv-header>
+
+    <main class="relative z-10 w-full max-w-4xl mx-auto px-4 pt-32 pb-24">
+        <a href="/" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold mono uppercase tracking-widest mb-6">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Back to Store
+        </a>
+
+        <div class="premium-glass-panel p-8 md:p-12 legal-content">
+            <h1>Terms of Service</h1>
+            <span class="date">Effective Date: March 18, 2026</span>
+
+            <p>Welcome to SilenVault (silenvault.com). By accessing our website and purchasing or downloading our digital assets, you agree to be bound by these Terms of Service. If you do not agree, please do not use our website or download our products.</p>
+
+            <h2>1. Merchant of Record</h2>
+            <p>Our order process is conducted by our online reseller, Lemon Squeezy. Lemon Squeezy is the Merchant of Record for all our orders. They provide all customer service inquiries and handle returns according to their policies. By purchasing an asset, you agree to their Terms of Service in addition to ours.</p>
+
+            <h2>2. Intellectual Property</h2>
+            <p>All digital assets, images, code, videos, and content provided on SilenVault are the exclusive intellectual property of SilenVault and its creators. Purchasing or downloading a product does not transfer copyright or ownership of the asset to you.</p>
+
+            <h2>3. Digital Asset License</h2>
+            <p>When you purchase or download a free asset from SilenVault, you are granted a <strong>limited, non-exclusive, non-transferable license</strong> to use the digital product.</p>
+            
+            <p><strong>You ARE allowed to:</strong></p>
+            <ul>
+                <li>Use the assets for your personal digital workspaces, devices, and personal projects.</li>
+                <li>Use the assets as backgrounds or elements in your own personal (non-commercial) content.</li>
+            </ul>
+
+            <p><strong>You are strictly NOT allowed to:</strong></p>
+            <ul>
+                <li>Resell, sub-license, share, or redistribute the raw digital files to third parties.</li>
+                <li>Mint our assets as NFTs or claim them as your own original artwork.</li>
+                <li>Bundle our assets into your own commercial products or templates for sale.</li>
+            </ul>
+            <p><em>If you require a commercial license for a specific asset, you must contact us directly to negotiate commercial rights.</em></p>
+
+            <h2>4. User Conduct</h2>
+            <p>You agree not to use automated scripts, spiders, or bots to scrape our website's content, bypass our secure checkout systems, or hotlink our hosted files to other websites.</p>
+
+            <h2>5. Limitation of Liability</h2>
+            <p>All digital products are provided "as is" without warranty of any kind, either express or implied. SilenVault shall not be held liable for any damages, data loss, or system issues resulting from the use or inability to use our digital files. You use all downloaded assets at your own risk.</p>
+
+            <h2>6. Modifications to the Service and Prices</h2>
+            <p>Prices for our products are subject to change without notice. We reserve the right to modify or discontinue any product or service without notice at any time.</p>
+
+            <h2>7. Contact Information</h2>
+            <p>For any questions regarding these Terms of Service or licensing inquiries, please contact us at: <strong>support@silenvault.com</strong>.</p>
+        </div>
+    </main>
+
+    <sv-footer base-path="/"></sv-footer>
+
+</body>
+</html>
