@@ -253,7 +253,7 @@ function renderGrid(containerId, products) {
         } else if (product.images && product.images.length > 0) {
             const imageTags = product.images.map((img, index) => 
                 `<div class="slider-img ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'} absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-700" style="background-image: url('${img}');">
-                    <img src="/watermark.png" alt="" class="absolute inset-0 w-full h-full opacity-0 !cursor-none pointer-events-auto" oncontextmenu="return false;" draggable="false">
+                    <img src="/watermark.png" alt="" class="absolute inset-0 w-full h-full !cursor-none pointer-events-auto" style="opacity: 0;" oncontextmenu="return false;" draggable="false">
                 </div>`
             ).join('');
             

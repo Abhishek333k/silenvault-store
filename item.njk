@@ -6,7 +6,7 @@ pagination:
 permalink: "item/{{ product.ID }}/index.html"
 ---
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="cursor: none !important;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,6 +53,8 @@ permalink: "item/{{ product.ID }}/index.html"
 </script>
 
     <style>
+        /* KILL NATIVE OS CURSOR INSTANTLY */
+    * { cursor: none !important; }
     /* Anti-Theft Overlay */
         .asset-protect {
             position: relative;
@@ -86,16 +88,20 @@ permalink: "item/{{ product.ID }}/index.html"
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body>
+<body style="cursor: none !important;">
 
     <sv-header base-path="/"></sv-header>
-
+<div id="swup" class="transition-fade">
     <main class="relative z-10 w-full max-w-[1400px] mx-auto px-4 pt-32 pb-24">
         
-        <a href="/" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold mono uppercase tracking-widest mb-6">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            Back to Store
-        </a>
+       <div class="w-full flex justify-start mb-6">
+                <a href="javascript:history.back()" class="group flex items-center gap-2 text-slate-400 hover:text-[#00F0FF] transition-colors font-mono text-sm uppercase tracking-widest cursor-pointer">
+                    <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to store
+                </a>
+            </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
@@ -116,7 +122,7 @@ permalink: "item/{{ product.ID }}/index.html"
                                  style="background-image: url('{{ img }}');" 
                                  data-index="{{ globalIndex }}" data-type="image">
                                  
-                                <img src="/watermark.png" alt="" class="w-full h-full object-cover opacity-0 !cursor-none" style="pointer-events: auto;" oncontextmenu="return false;" draggable="false">
+                                <img src="/watermark.png" alt="" class="absolute inset-0 w-full h-full !cursor-none" style="opacity: 0; pointer-events: auto;" oncontextmenu="return false;" draggable="false">
                             </div>
                         {% endfor %}
 
@@ -142,7 +148,7 @@ permalink: "item/{{ product.ID }}/index.html"
                     {% for img in product.mediaFiles %}
                         {% set globalIndex = loop.index0 + product.videoFiles.length %}
                         <div class="thumb cursor-pointer shrink-0 w-32 md:w-40 aspect-video bg-black rounded-lg border-[2px] transition-all snap-start overflow-hidden relative untouchable-artwork bg-cover bg-center {% if globalIndex == 0 %}border-[#00F0FF] opacity-100{% else %}border-transparent opacity-50 hover:opacity-100{% endif %}" data-target="{{ globalIndex }}" style="background-image: url('{{ img }}');">
-                            <img src="/watermark.png" alt="" class="w-full h-full object-cover opacity-0 !cursor-none" style="pointer-events: auto;" oncontextmenu="return false;" draggable="false">
+                            <img src="/watermark.png" alt="" class="absolute inset-0 w-full h-full !cursor-none" style="opacity: 0; pointer-events: auto;" oncontextmenu="return false;" draggable="false">
                         </div>
                     {% endfor %}
 
@@ -154,7 +160,7 @@ permalink: "item/{{ product.ID }}/index.html"
                 
                 {% if product.mediaFiles.length > 0 %}
                 <div class="w-full rounded-xl aspect-[4/3] shadow-2xl border border-white/5 hidden lg:block bg-cover bg-center untouchable-artwork relative overflow-hidden" style="background-image: url('{{ product.mediaFiles[0] }}');">
-                    <img src="/watermark.png" alt="" class="w-full h-full object-cover opacity-0 !cursor-none" style="pointer-events: auto;" oncontextmenu="return false;" draggable="false">
+                    <img src="/watermark.png" alt="" class="absolute inset-0 w-full h-full !cursor-none" style="opacity: 0; pointer-events: auto;" oncontextmenu="return false;" draggable="false">
                 </div>
                 {% endif %}
 
@@ -216,7 +222,7 @@ permalink: "item/{{ product.ID }}/index.html"
             </div>
         </div>
     </main>
-
+</div>
     <sv-footer base-path="/"></sv-footer>
 
     <script>

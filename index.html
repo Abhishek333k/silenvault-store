@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="cursor: none !important;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +14,8 @@
     <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
 
     <style>
+        /* KILL NATIVE OS CURSOR INSTANTLY */
+        * { cursor: none !important; }
         body { font-family: 'Inter', sans-serif; background-color: #000000; color: #f8fafc; margin: 0; min-height: 100vh; overflow-x: hidden; }
         .mono { font-family: 'Fira Code', monospace; }
         
@@ -52,7 +54,7 @@
     })
 </script>
 </head>
-<body>
+<body style="cursor: none !important;">
 
     <!-- <div class="cinematic-bg">
         <canvas id="neural-canvas"></canvas>
@@ -60,7 +62,7 @@
     </div> -->
 
     <sv-header base-path="."></sv-header>
-
+<div id="swup" class="transition-fade"></div>
     <main class="relative z-10 w-full max-w-7xl mx-auto px-4 pt-32 pb-16 text-center flex flex-col items-center">
         <div class="flex justify-center mb-8 w-full">
             <img src="assets/img/BANNER.webp" alt="SilenVault Store" class="w-11/12 md:w-3/4 max-w-2xl h-auto object-contain float-anim drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
@@ -128,7 +130,7 @@
             </div>
         </div>
     </section>
-
+</div>
     <sv-footer base-path="."></sv-footer>
 
     <script>

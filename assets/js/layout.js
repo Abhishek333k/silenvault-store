@@ -1,6 +1,6 @@
 /**
  * SilenVault Digital Armory - Core Layout Components
- * Upgraded Evolved Cyberpunk UI, Security, and Neural Cursor Engine
+ * Upgraded Evolved Cyberpunk UI, Security, and Neural Cursor Engine (SPA Enabled)
  */
 
 // ==========================================
@@ -137,6 +137,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         @media (pointer: fine) { body, a, button, input, .cursor-pointer { cursor: none !important; } }
         
+        /* Swup SPA Cinematic Transitions */
+        .transition-fade {
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        html.is-animating .transition-fade {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
         .cursor-wrapper { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2147483647 !important; transition: opacity 0.3s ease; }
         
         /* Core Arrow: High contrast, pure white, native size */
@@ -173,6 +184,50 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         document.body.insertAdjacentHTML('beforeend', cursorHTML);
     }
+
+    // ==========================================
+    // SPA ROUTER ENGINE (Swup.js + Scroll Plugin)
+    // ==========================================
+    const swupScript = document.createElement('script');
+    swupScript.src = "https://unpkg.com/swup@4";
+    document.head.appendChild(swupScript);
+    
+    // Inject the Swup Scroll Plugin
+    const swupScrollScript = document.createElement('script');
+    swupScrollScript.src = "https://unpkg.com/@swup/scroll-plugin@3";
+    document.head.appendChild(swupScrollScript);
+    
+    swupScript.onload = () => {
+        swupScrollScript.onload = () => {
+            // Initialize the Router with Scroll Restoration
+            const swup = new Swup({
+                containers: ['#swup'],
+                animationSelector: '[class*="transition-"]',
+                cache: true,
+                plugins: [new SwupScrollPlugin()] // Handles the Back Button scroll memory!
+            });
+
+            // The Re-Ignition Sequence
+            swup.hooks.on('page:view', () => {
+                // 1. Force re-execute products.js so the grid builds and galleries work
+                const oldScript = document.querySelector('script[src*="products.js"]');
+                if (oldScript) {
+                    const newScript = document.createElement('script');
+                    newScript.src = oldScript.src;
+                    newScript.defer = true;
+                    oldScript.remove();
+                    document.head.appendChild(newScript);
+                }
+                
+                // 2. Re-initialize Lemon Squeezy Buttons
+                if (window.createLemonSqueezy) {
+                    window.createLemonSqueezy();
+                }
+                
+                // (Notice we removed the hardcoded window.scrollTo. The plugin handles it now!)
+            });
+        };
+    };
 
     // ==========================================
     // THE UNIFIED PHYSICS ENGINE
