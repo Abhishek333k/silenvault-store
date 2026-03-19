@@ -1,21 +1,18 @@
 /**
  * SilenVault Digital Armory - Core Layout Components
- * Upgraded Evolved Cyberpunk UI with Crest Integration
+ * Upgraded Evolved Cyberpunk UI, Security, and Neural Cursor Engine
  */
 
 // ==========================================
 // TELEMETRY PROTOCOL (Google Analytics GA4)
-// Automatically injected into all pages via DRY
 // ==========================================
 (function injectAnalytics() {
     if (!window.gtag) {
-        // 1. Inject the external Google script
         const scriptExternal = document.createElement('script');
         scriptExternal.async = true;
         scriptExternal.src = 'https://www.googletagmanager.com/gtag/js?id=G-GRK3JQ36T6';
         document.head.appendChild(scriptExternal);
 
-        // 2. Inject the initialization config
         const scriptInit = document.createElement('script');
         scriptInit.innerHTML = `
             window.dataLayer = window.dataLayer || [];
@@ -30,10 +27,8 @@
 // ==========================================
 // COMPONENT ENGINE
 // ==========================================
-
 class SVHeader extends HTMLElement {
     connectedCallback() {
-        // Strict path cleaner: removes trailing slash, ensures clean start
         let basePath = this.getAttribute('base-path') || '.';
         basePath = basePath.replace(/\/+$/, '');
         const cleanAssets = `${basePath}/assets`.replace(/\/+/g, '/');
@@ -43,7 +38,6 @@ class SVHeader extends HTMLElement {
         this.innerHTML = `
             <header class="fixed top-0 left-0 w-full z-50 bg-[#000000]/40 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
                 <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                    
                     <a href="${cleanIndex}" class="flex items-center gap-3 group">
                         <div class="w-8 h-8 flex items-center justify-center transform group-hover:scale-105 transition-transform">
                             <img src="${cleanAssets}/img/SILENVAULT_CREST.webp" alt="SilenVault Crest" class="w-full h-full object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
@@ -52,16 +46,10 @@ class SVHeader extends HTMLElement {
                             SilenVault <span class="text-slate-500 font-light">// STORE</span>
                         </span>
                     </a>
-
                     <nav class="hidden md:flex items-center gap-6">
-                        <a href="${cleanRequest}" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-colors font-mono">
-                            Custom Request
-                        </a>
-                        <a href="https://silenvault.com" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-colors font-mono">
-                            Return to Toolkit
-                        </a>
+                        <a href="${cleanRequest}" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-colors font-mono">Custom Request</a>
+                        <a href="https://silenvault.com" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-colors font-mono">Return to Toolkit</a>
                     </nav>
-
                 </div>
             </header>
         `;
@@ -70,13 +58,11 @@ class SVHeader extends HTMLElement {
 
 class SVFooter extends HTMLElement {
     connectedCallback() {
-        // Strict path cleaner for Footer
         let basePath = this.getAttribute('base-path') || '.';
         basePath = basePath.replace(/\/+$/, '');
         const cleanAssets = `${basePath}/assets`.replace(/\/+/g, '/');
         const cleanAbout = `${basePath}/about`.replace(/\/+/g, '/');
         const cleanSponsor = `${basePath}/sponsor`.replace(/\/+/g, '/');
-        const cleanLegal = `${basePath}/legal`.replace(/\/+/g, '/');
 
         this.innerHTML = `
             <footer class="w-full bg-[#000000] border-t border-white/5 pt-12 pb-8 z-10 relative">
@@ -87,7 +73,6 @@ class SVFooter extends HTMLElement {
                             © ${new Date().getFullYear()} SilenVault. All systems operational.
                         </span>
                     </div>
-                    
                     <div class="flex flex-wrap justify-center gap-6">
                         <a href="${cleanAbout}" class="text-xs text-slate-500 hover:text-white transition-colors mono">About</a>
                         <a href="${cleanSponsor}" class="text-xs text-slate-500 hover:text-white transition-colors mono">Sponsor</a>
@@ -101,7 +86,6 @@ class SVFooter extends HTMLElement {
         `;
     }
 }
-
 customElements.define('sv-header', SVHeader);
 customElements.define('sv-footer', SVFooter);
 
@@ -110,46 +94,20 @@ customElements.define('sv-footer', SVFooter);
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     
-    // 1. Block Right-Click Context Menu EVERYWHERE
-    document.addEventListener('contextmenu', event => {
-        event.preventDefault();
-    });
+    // 1. Block Context Menu & Dragging globally
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('dragstart', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
 
-    // 2. Block Dragging of images globally
-    document.addEventListener('dragstart', event => {
-        if (event.target.tagName === 'IMG') event.preventDefault();
-    });
-
-    // 3. Block DevTools Keyboard Shortcuts Globally
+    // 2. Block DevTools Shortcuts
     document.addEventListener('keydown', function(event) {
-        // Prevent F12 (Standard DevTools)
-        if (event.key === 'F12') {
-            event.preventDefault();
-            return false;
+        if (event.key === 'F12') return event.preventDefault(), false;
+        if ((event.ctrlKey || event.metaKey) && event.shiftKey && (event.key.toLowerCase() === 'i' || event.key.toLowerCase() === 'c' || event.key.toLowerCase() === 'j')) {
+            return event.preventDefault(), false;
         }
-        // Prevent Ctrl+Shift+I / Cmd+Option+I (Open Inspector)
-        if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'i') {
-            event.preventDefault();
-            return false;
-        }
-        // Prevent Ctrl+Shift+C / Cmd+Option+C (Inspect Element)
-        if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'c') {
-            event.preventDefault();
-            return false;
-        }
-        // Prevent Ctrl+Shift+J / Cmd+Option+J (Open Console)
-        if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'j') {
-            event.preventDefault();
-            return false;
-        }
-        // Prevent Ctrl+U / Cmd+U (View Page Source)
-        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'u') {
-            event.preventDefault();
-            return false;
-        }
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'u') return event.preventDefault(), false;
     });
 
-   // 4. THE KILL SWITCH (DevTools Detection)
+    // 3. THE KILL SWITCH
     const triggerLockdown = () => {
         document.body.innerHTML = `
             <div style="background:#000000; color:#00F0FF; height:100vh; width:100vw; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:'Fira Code', monospace; z-index:999999; position:fixed; top:0; left:0; text-align:center;">
@@ -160,24 +118,226 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     };
 
-    // Trigger 1: The Debugger Trap
     setInterval(function() {
-        const start = performance.now();
-        debugger; 
-        const end = performance.now();
-        if (end - start > 100) {
-            triggerLockdown();
-        }
+        const start = performance.now(); debugger; const end = performance.now();
+        if (end - start > 100) triggerLockdown();
     }, 2000);
 
-    // Trigger 2: Screen Dimension Anomaly (Detects when DevTools docks to the side/bottom)
     window.addEventListener('resize', () => {
-        const widthDiff = window.outerWidth - window.innerWidth > 160;
-        const heightDiff = window.outerHeight - window.innerHeight > 160;
-        if (widthDiff || heightDiff) {
-            triggerLockdown();
-        }
+        if ((window.outerWidth - window.innerWidth > 160) || (window.outerHeight - window.innerHeight > 160)) triggerLockdown();
     });
 
-});
+    // ==========================================
+    // INJECT NEURAL CANVAS & TACTICAL CURSOR
+    // ==========================================
+    
+    // Inject CSS (Added max z-index and black contrast drop-shadows)
+    const cursorCSS = `
+        body { 
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; 
+        }
+        @media (pointer: fine) { body, a, button, input, .cursor-pointer { cursor: none !important; } }
+        
+        /* z-index maxed out to 2147483647 to render over Lemon Squeezy */
+        .cursor-wrapper { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2147483647 !important; transition: opacity 0.3s ease; }
+        #cursor-follower-wrapper { z-index: 2147483646 !important; }
+        
+        /* Added black drop-shadow for stark contrast on white backgrounds */
+        .svg-cursor { 
+            width: 40px; height: 40px; fill: none; stroke: #FFFFFF; stroke-width: 1.8; 
+            filter: drop-shadow(0 0 2px rgba(0,0,0,1)) drop-shadow(0 0 4px rgba(255,255,255,0.7)); 
+            transition: transform 0.2s ease-out, stroke 0.2s; position: absolute; top: -20px; left: -20px; 
+        }
+        .svg-follower { 
+            width: 60px; height: 60px; fill: none; stroke: rgba(255, 255, 255, 0.5); stroke-width: 1.2; 
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.8));
+            transition: transform 0.2s ease-out, stroke 0.3s; position: absolute; top: -30px; left: -30px; 
+        }
+        
+        body.hovering .svg-cursor { transform: scale(0.75); stroke: #FFFFFF; filter: drop-shadow(0 0 2px rgba(0,0,0,1)) drop-shadow(0 0 6px rgba(255,255,255,0.9)); }
+        body.hovering .svg-follower { stroke: rgba(255, 255, 255, 0.8); animation: targetLock 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, plasmaCharge 2s linear 0.2s infinite; }
+        
+        @keyframes targetLock { 0% { transform: scale(1) rotate(0deg); } 100% { transform: scale(0.85) rotate(90deg); } }
+        @keyframes plasmaCharge { 0% { transform: scale(0.85) rotate(90deg); } 100% { transform: scale(0.85) rotate(450deg); } }
+        
+        body.clicking .svg-follower { animation: firingSpin 0.2s linear infinite !important; stroke: #FFFFFF; stroke-width: 1.5; }
+        @keyframes firingSpin { 0% { transform: scale(0.75) rotate(0deg); } 100% { transform: scale(0.75) rotate(360deg); } }
+    `;
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = cursorCSS;
+    document.head.appendChild(styleSheet);
 
+    // Inject Background
+    if (!document.getElementById('neural-canvas')) {
+        const bgHTML = `<div class="cinematic-bg" style="position: fixed; inset: 0; z-index: -2; background-color: #02040a; overflow: hidden;"><canvas id="neural-canvas"></canvas><div class="cinematic-vignette" style="position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at center, transparent 0%, #000000 100%), linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 80%, #000000 100%);"></div></div>`;
+        document.body.insertAdjacentHTML('afterbegin', bgHTML);
+    }
+
+    // Inject Cursors 
+    if (!document.getElementById('cursor-core-wrapper')) {
+        const cursorHTML = `
+            <div id="cursor-follower-wrapper" class="cursor-wrapper hidden md:block">
+                <svg class="svg-follower" viewBox="0 0 100 100"><path d="M 30 10 L 10 30 L 10 70 L 30 90 M 70 10 L 90 30 L 90 70 L 70 90" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/></svg>
+            </div>
+            <div id="cursor-core-wrapper" class="cursor-wrapper hidden md:block">
+                <svg class="svg-cursor" viewBox="0 0 100 100"><g transform="rotate(-22.5 50 50)"><polygon points="50,50 65,95 50,85 35,95" fill="rgba(255,255,255,0.25)" stroke="#FFFFFF" stroke-width="2"/></g></svg>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', cursorHTML);
+    }
+
+    // ==========================================
+    // THE UNIFIED PHYSICS ENGINE
+    // ==========================================
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [], energyPulses = [], mouse = { x: null, y: null, radius: 150 };
+
+    const coreWrapper = document.getElementById('cursor-core-wrapper');
+    const followerWrapper = document.getElementById('cursor-follower-wrapper');
+    let followerX = window.innerWidth / 2, followerY = window.innerHeight / 2;
+
+    // Mouse Tracking & Viewport Exit Logic
+    window.addEventListener('mousemove', (e) => { 
+        mouse.x = e.clientX; mouse.y = e.clientY; 
+        if(coreWrapper) coreWrapper.style.transform = `translate3d(${mouse.x}px, ${mouse.y}px, 0)`;
+        // Ensure cursor is visible if it came back into view
+        if(coreWrapper.style.opacity === '0') {
+            coreWrapper.style.opacity = '1';
+            followerWrapper.style.opacity = '1';
+        }
+    });
+    
+    // Hide cursor when leaving the window or entering secure iframes
+    document.addEventListener('mouseleave', (e) => {
+        mouse.x = null; mouse.y = null;
+        if(coreWrapper) coreWrapper.style.opacity = '0';
+        if(followerWrapper) followerWrapper.style.opacity = '0';
+    });
+    // Also hide if window loses focus (like clicking an iframe)
+    window.addEventListener('blur', () => {
+        mouse.x = null; mouse.y = null;
+        if(coreWrapper) coreWrapper.style.opacity = '0';
+        if(followerWrapper) followerWrapper.style.opacity = '0';
+    });
+
+    // Dynamic Hover Detection
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.closest('a, button, .cursor-pointer, .btn-action, input')) document.body.classList.add('hovering');
+    });
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.closest('a, button, .cursor-pointer, .btn-action, input')) document.body.classList.remove('hovering');
+    });
+
+    // The Click Physics: Siphoning ONLY to connected nodes
+    window.addEventListener('mousedown', () => document.body.classList.add('clicking'));
+    window.addEventListener('mouseup', () => {
+        document.body.classList.remove('clicking');
+        if (!mouse.x || !mouse.y) return;
+
+        let connectedNodes = particles.filter(p => Math.hypot(p.x - mouse.x, p.y - mouse.y) < mouse.radius);
+
+        connectedNodes.forEach(node => {
+            let numSparks = 1 + Math.floor(Math.random() * 2);
+            for(let i = 0; i < numSparks; i++) {
+                energyPulses.push({
+                    x: mouse.x + (Math.random() - 0.5) * 10,
+                    y: mouse.y + (Math.random() - 0.5) * 10,
+                    target: node, 
+                    speed: 0.1 + Math.random() * 0.1
+                });
+            }
+        });
+    });
+
+    function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; initParticles(); }
+    window.addEventListener('resize', resize);
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width; this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+            this.radius = Math.random() * 1.5 + 0.5; 
+            this.energyLevel = 0; 
+            this.MAX_ENERGY = 2.0; 
+        }
+        update() {
+            this.x += this.vx; this.y += this.vy;
+            if (this.x < 0 || this.x > width) this.vx = -this.vx;
+            if (this.y < 0 || this.y > height) this.vy = -this.vy;
+            if (this.energyLevel > 0) {
+                this.energyLevel -= 0.04;
+                if (this.energyLevel < 0) this.energyLevel = 0;
+            }
+        }
+        draw() { 
+            ctx.beginPath(); 
+            ctx.arc(this.x, this.y, this.radius + (this.energyLevel * 1.5), 0, Math.PI * 2); 
+            if (this.energyLevel > 0.1) {
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.min(this.energyLevel, 1)})`;
+                ctx.shadowBlur = 10 * this.energyLevel;
+                ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+            } else {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.shadowBlur = 0;
+            }
+            ctx.fill(); 
+            ctx.shadowBlur = 0; 
+        }
+    }
+
+    function initParticles() {
+        particles = [];
+        let numberOfParticles = (width * height) / 14000; 
+        for (let i = 0; i < numberOfParticles; i++) particles.push(new Particle());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        if (mouse.x !== null && followerWrapper) {
+            followerX += (mouse.x - followerX) * 0.25;
+            followerY += (mouse.y - followerY) * 0.25;
+            followerWrapper.style.transform = `translate3d(${followerX}px, ${followerY}px, 0)`;
+        }
+
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update(); particles[i].draw();
+            
+            for (let j = i; j < particles.length; j++) {
+                let dx = particles[i].x - particles[j].x; let dy = particles[i].y - particles[j].y; let dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 100) {
+                    ctx.beginPath(); ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - dist/1000})`; ctx.lineWidth = 0.5;
+                    ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                }
+            }
+            if (mouse.x != null && mouse.y != null) {
+                let dx = particles[i].x - mouse.x; let dy = particles[i].y - mouse.y; let dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < mouse.radius) {
+                    ctx.beginPath(); ctx.strokeStyle = `rgba(255, 255, 255, ${0.3 - dist/500})`; ctx.lineWidth = 1;
+                    ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+                }
+            }
+        }
+
+        for (let i = energyPulses.length - 1; i >= 0; i--) {
+            let p = energyPulses[i];
+            let dx = p.target.x - p.x; let dy = p.target.y - p.y;
+            let dist = Math.hypot(dx, dy);
+
+            p.x += dx * p.speed; p.y += dy * p.speed;
+
+            ctx.beginPath(); ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.shadowBlur = 6; ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+            ctx.fill(); ctx.shadowBlur = 0;
+
+            if (dist < 5) {
+                p.target.energyLevel = Math.min(p.target.energyLevel + 0.6, p.target.MAX_ENERGY); 
+                energyPulses.splice(i, 1);
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+    resize(); animate();
+});
