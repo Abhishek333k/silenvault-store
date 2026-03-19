@@ -131,37 +131,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // INJECT NEURAL CANVAS & TACTICAL CURSOR
     // ==========================================
     
-    // Inject CSS (Added max z-index and black contrast drop-shadows)
     const cursorCSS = `
         body { 
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; 
         }
         @media (pointer: fine) { body, a, button, input, .cursor-pointer { cursor: none !important; } }
         
-        /* z-index maxed out to 2147483647 to render over Lemon Squeezy */
         .cursor-wrapper { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2147483647 !important; transition: opacity 0.3s ease; }
-        #cursor-follower-wrapper { z-index: 2147483646 !important; }
         
-        /* Added black drop-shadow for stark contrast on white backgrounds */
+        /* Core Arrow: High contrast, pure white, native size */
+        /* Increased from 28px to 40px */
         .svg-cursor { 
-            width: 40px; height: 40px; fill: none; stroke: #FFFFFF; stroke-width: 1.8; 
+            width: 40px; height: 40px; fill: none; stroke: #FFFFFF; stroke-width: 3; 
             filter: drop-shadow(0 0 2px rgba(0,0,0,1)) drop-shadow(0 0 4px rgba(255,255,255,0.7)); 
-            transition: transform 0.2s ease-out, stroke 0.2s; position: absolute; top: -20px; left: -20px; 
-        }
-        .svg-follower { 
-            width: 60px; height: 60px; fill: none; stroke: rgba(255, 255, 255, 0.5); stroke-width: 1.2; 
-            filter: drop-shadow(0 0 2px rgba(0,0,0,0.8));
-            transition: transform 0.2s ease-out, stroke 0.3s; position: absolute; top: -30px; left: -30px; 
+            transition: transform 0.15s ease-out, stroke 0.2s; 
+            position: absolute; top: -20px; left: -20px; 
         }
         
-        body.hovering .svg-cursor { transform: scale(0.75); stroke: #FFFFFF; filter: drop-shadow(0 0 2px rgba(0,0,0,1)) drop-shadow(0 0 6px rgba(255,255,255,0.9)); }
-        body.hovering .svg-follower { stroke: rgba(255, 255, 255, 0.8); animation: targetLock 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, plasmaCharge 2s linear 0.2s infinite; }
+        /* Hover State: Slight shrink, brighter glow */
+        body.hovering .svg-cursor { transform: scale(0.85); stroke: #FFFFFF; filter: drop-shadow(0 0 2px rgba(0,0,0,1)) drop-shadow(0 0 6px rgba(255,255,255,0.9)); }
         
-        @keyframes targetLock { 0% { transform: scale(1) rotate(0deg); } 100% { transform: scale(0.85) rotate(90deg); } }
-        @keyframes plasmaCharge { 0% { transform: scale(0.85) rotate(90deg); } 100% { transform: scale(0.85) rotate(450deg); } }
-        
-        body.clicking .svg-follower { animation: firingSpin 0.2s linear infinite !important; stroke: #FFFFFF; stroke-width: 1.5; }
-        @keyframes firingSpin { 0% { transform: scale(0.75) rotate(0deg); } 100% { transform: scale(0.75) rotate(360deg); } }
+        /* Click State: Tightens slightly */
+        body.clicking .svg-cursor { transform: scale(0.7); stroke-width: 4; }
     `;
     const styleSheet = document.createElement("style");
     styleSheet.innerText = cursorCSS;
@@ -173,12 +164,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.insertAdjacentHTML('afterbegin', bgHTML);
     }
 
-    // Inject Cursors 
+    // Inject Core Cursor Only
     if (!document.getElementById('cursor-core-wrapper')) {
         const cursorHTML = `
-            <div id="cursor-follower-wrapper" class="cursor-wrapper hidden md:block">
-                <svg class="svg-follower" viewBox="0 0 100 100"><path d="M 30 10 L 10 30 L 10 70 L 30 90 M 70 10 L 90 30 L 90 70 L 70 90" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/></svg>
-            </div>
             <div id="cursor-core-wrapper" class="cursor-wrapper hidden md:block">
                 <svg class="svg-cursor" viewBox="0 0 100 100"><g transform="rotate(-22.5 50 50)"><polygon points="50,50 65,95 50,85 35,95" fill="rgba(255,255,255,0.25)" stroke="#FFFFFF" stroke-width="2"/></g></svg>
             </div>
@@ -194,34 +182,25 @@ document.addEventListener('DOMContentLoaded', () => {
     let width, height, particles = [], energyPulses = [], mouse = { x: null, y: null, radius: 150 };
 
     const coreWrapper = document.getElementById('cursor-core-wrapper');
-    const followerWrapper = document.getElementById('cursor-follower-wrapper');
-    let followerX = window.innerWidth / 2, followerY = window.innerHeight / 2;
 
     // Mouse Tracking & Viewport Exit Logic
     window.addEventListener('mousemove', (e) => { 
         mouse.x = e.clientX; mouse.y = e.clientY; 
-        if(coreWrapper) coreWrapper.style.transform = `translate3d(${mouse.x}px, ${mouse.y}px, 0)`;
-        // Ensure cursor is visible if it came back into view
-        if(coreWrapper.style.opacity === '0') {
-            coreWrapper.style.opacity = '1';
-            followerWrapper.style.opacity = '1';
+        if(coreWrapper) {
+            coreWrapper.style.transform = `translate3d(${mouse.x}px, ${mouse.y}px, 0)`;
+            if(coreWrapper.style.opacity === '0') coreWrapper.style.opacity = '1';
         }
     });
     
-    // Hide cursor when leaving the window or entering secure iframes
-    document.addEventListener('mouseleave', (e) => {
+    document.addEventListener('mouseleave', () => {
         mouse.x = null; mouse.y = null;
         if(coreWrapper) coreWrapper.style.opacity = '0';
-        if(followerWrapper) followerWrapper.style.opacity = '0';
     });
-    // Also hide if window loses focus (like clicking an iframe)
     window.addEventListener('blur', () => {
         mouse.x = null; mouse.y = null;
         if(coreWrapper) coreWrapper.style.opacity = '0';
-        if(followerWrapper) followerWrapper.style.opacity = '0';
     });
 
-    // Dynamic Hover Detection
     document.addEventListener('mouseover', (e) => {
         if (e.target.closest('a, button, .cursor-pointer, .btn-action, input')) document.body.classList.add('hovering');
     });
@@ -229,7 +208,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.closest('a, button, .cursor-pointer, .btn-action, input')) document.body.classList.remove('hovering');
     });
 
-    // The Click Physics: Siphoning ONLY to connected nodes
     window.addEventListener('mousedown', () => document.body.classList.add('clicking'));
     window.addEventListener('mouseup', () => {
         document.body.classList.remove('clicking');
@@ -294,12 +272,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function animate() {
         ctx.clearRect(0, 0, width, height);
-
-        if (mouse.x !== null && followerWrapper) {
-            followerX += (mouse.x - followerX) * 0.25;
-            followerY += (mouse.y - followerY) * 0.25;
-            followerWrapper.style.transform = `translate3d(${followerX}px, ${followerY}px, 0)`;
-        }
 
         for (let i = 0; i < particles.length; i++) {
             particles[i].update(); particles[i].draw();
