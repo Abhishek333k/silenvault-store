@@ -1,6 +1,6 @@
 /**
  * SilenVault Digital Armory - Core Layout Components
- * Upgraded Evolved Cyberpunk UI, Security, and Neural Cursor Engine (SPA Enabled)
+ * Upgraded Evolved Cyberpunk UI, Security, and Neural Cursor Engine
  */
 
 // ==========================================
@@ -132,31 +132,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     
     const cursorCSS = `
-        body { 
-            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; 
-        }
-        @media (pointer: fine) { body, a, button, input, .cursor-pointer { cursor: none !important; } }
+        /* FORCE NATIVE OS CURSOR TO HIDE */
+        * { cursor: none !important; }
+        body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
         
-        /* Swup SPA Cinematic Transitions */
-        .transition-fade {
-            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-            opacity: 1;
-            transform: translateY(0);
+        /* Cursor starts at opacity 0 (Invisible) */
+        .cursor-wrapper { 
+            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2147483647 !important; 
+            opacity: 0; transition: opacity 0.2s ease; 
         }
-        html.is-animating .transition-fade {
-            opacity: 0;
-            transform: translateY(15px);
-        }
-
-        .cursor-wrapper { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2147483647 !important; transition: opacity 0.3s ease; }
         
         /* Core Arrow: High contrast, pure white, native size */
-        /* Increased from 28px to 40px */
         .svg-cursor { 
-            width: 40px; height: 40px; fill: none; stroke: #FFFFFF; stroke-width: 3; 
+            width: 28px; height: 28px; fill: none; stroke: #FFFFFF; stroke-width: 3; 
             filter: drop-shadow(0 0 2px rgba(0,0,0,1)) drop-shadow(0 0 4px rgba(255,255,255,0.7)); 
             transition: transform 0.15s ease-out, stroke 0.2s; 
-            position: absolute; top: -20px; left: -20px; 
+            position: absolute; top: -14px; left: -14px; 
         }
         
         /* Hover State: Slight shrink, brighter glow */
@@ -186,50 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // SPA ROUTER ENGINE (Swup.js + Scroll Plugin)
-    // ==========================================
-    const swupScript = document.createElement('script');
-    swupScript.src = "https://unpkg.com/swup@4";
-    document.head.appendChild(swupScript);
-    
-    // Inject the Swup Scroll Plugin
-    const swupScrollScript = document.createElement('script');
-    swupScrollScript.src = "https://unpkg.com/@swup/scroll-plugin@3";
-    document.head.appendChild(swupScrollScript);
-    
-    swupScript.onload = () => {
-        swupScrollScript.onload = () => {
-            // Initialize the Router with Scroll Restoration
-            const swup = new Swup({
-                containers: ['#swup'],
-                animationSelector: '[class*="transition-"]',
-                cache: true,
-                plugins: [new SwupScrollPlugin()] // Handles the Back Button scroll memory!
-            });
-
-            // The Re-Ignition Sequence
-            swup.hooks.on('page:view', () => {
-                // 1. Force re-execute products.js so the grid builds and galleries work
-                const oldScript = document.querySelector('script[src*="products.js"]');
-                if (oldScript) {
-                    const newScript = document.createElement('script');
-                    newScript.src = oldScript.src;
-                    newScript.defer = true;
-                    oldScript.remove();
-                    document.head.appendChild(newScript);
-                }
-                
-                // 2. Re-initialize Lemon Squeezy Buttons
-                if (window.createLemonSqueezy) {
-                    window.createLemonSqueezy();
-                }
-                
-                // (Notice we removed the hardcoded window.scrollTo. The plugin handles it now!)
-            });
-        };
-    };
-
-    // ==========================================
     // THE UNIFIED PHYSICS ENGINE
     // ==========================================
     const canvas = document.getElementById('neural-canvas');
@@ -238,15 +185,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const coreWrapper = document.getElementById('cursor-core-wrapper');
 
-    // Mouse Tracking & Viewport Exit Logic
+    // MOUSE TRACKING: Fades in on movement
     window.addEventListener('mousemove', (e) => { 
         mouse.x = e.clientX; mouse.y = e.clientY; 
         if(coreWrapper) {
             coreWrapper.style.transform = `translate3d(${mouse.x}px, ${mouse.y}px, 0)`;
-            if(coreWrapper.style.opacity === '0') coreWrapper.style.opacity = '1';
+            // Make visible ONLY when moving
+            if(coreWrapper.style.opacity === '0' || coreWrapper.style.opacity === '') {
+                coreWrapper.style.opacity = '1';
+            }
         }
     });
     
+    // MOUSE EXIT: Fades out completely when leaving tab or blurring
     document.addEventListener('mouseleave', () => {
         mouse.x = null; mouse.y = null;
         if(coreWrapper) coreWrapper.style.opacity = '0';

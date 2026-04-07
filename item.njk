@@ -91,17 +91,13 @@ permalink: "item/{{ product.ID }}/index.html"
 <body style="cursor: none !important;">
 
     <sv-header base-path="/"></sv-header>
-<div id="swup" class="transition-fade">
+
     <main class="relative z-10 w-full max-w-[1400px] mx-auto px-4 pt-32 pb-24">
         
-       <div class="w-full flex justify-start mb-6">
-                <a href="javascript:history.back()" class="group flex items-center gap-2 text-slate-400 hover:text-[#00F0FF] transition-colors font-mono text-sm uppercase tracking-widest cursor-pointer">
-                    <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    Back to store
-                </a>
-            </div>
+        <a href="/" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold mono uppercase tracking-widest mb-6">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Back to Store
+        </a>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
@@ -222,7 +218,7 @@ permalink: "item/{{ product.ID }}/index.html"
             </div>
         </div>
     </main>
-</div>
+
     <sv-footer base-path="/"></sv-footer>
 
     <script>
