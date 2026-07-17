@@ -26,21 +26,60 @@ async function fetchAndRenderProducts() {
         const text = await response.text();
         const jsonString = text.substring(47).slice(0, -2);
         const json = JSON.parse(jsonString);
-        
-        const productsRaw = json.table.rows.map(row => {
+
+        // Google Sheets gviz often returns empty col.label and col.id like "A","B".
+        // NEVER use "A"/"B" as field names — fall back to known header order.
+        // Extra columns (ProductPage, Features, …) stay at the END of the same sheet.
+        const defaultLabels = [
+            'Status', 'ID', 'Title', 'Description', 'Price', 'Type', 'Tag',
+            'Images', 'CheckoutURL', 'SmartTags',
+            'ProductPage', 'Features', 'Requirements', 'Platform',
+        ];
+        const labels = (json.table.cols || []).map((c, i) => {
+            // Only trust a real header label, not spreadsheet column letters
+            const lab = (c.label || '').trim();
+            if (lab && !/^[A-Z]{1,3}$/.test(lab)) return lab;
+            return defaultLabels[i] || `col${i}`;
+        });
+        // If first data row is the header row (common when labels are empty), map names from it
+        const rows = json.table.rows || [];
+        if (rows.length > 0 && rows[0].c && rows[0].c[0] && String(rows[0].c[0].v).toLowerCase() === 'status') {
+            rows[0].c.forEach((cell, i) => {
+                if (cell && cell.v != null && String(cell.v).trim()) {
+                    labels[i] = String(cell.v).trim();
+                }
+            });
+        }
+        const cell = (row, name) => {
+            const i = labels.indexOf(name);
+            if (i < 0 || !row.c || !row.c[i] || row.c[i].v == null) return '';
+            return String(row.c[i].v);
+        };
+
+        const productsRaw = rows.map(row => {
             return {
-                status: row.c[0] ? row.c[0].v : 'Draft',
-                id: row.c[1] ? row.c[1].v : '',
-                title: row.c[2] ? row.c[2].v : '',
-                description: row.c[3] ? row.c[3].v : '',
-                price: row.c[4] ? row.c[4].v : 'FREE',
-                type: row.c[5] ? row.c[5].v : 'Free',
-                tag: row.c[6] ? row.c[6].v : 'Asset', // Used for Main UI Category Buttons
-                folderPath: row.c[7] ? row.c[7].v : '',
-                checkoutUrl: row.c[8] ? row.c[8].v : '#',
-                smartTags: row.c[9] ? row.c[9].v : '' // Hidden metadata used ONLY by Fuse.js
+                status: cell(row, 'Status') || 'Draft',
+                id: cell(row, 'ID'),
+                title: cell(row, 'Title'),
+                description: cell(row, 'Description'),
+                price: cell(row, 'Price') || 'FREE',
+                type: cell(row, 'Type') || 'Free',
+                tag: cell(row, 'Tag') || 'Asset',
+                folderPath: cell(row, 'Images'),
+                checkoutUrl: cell(row, 'CheckoutURL') || '#',
+                smartTags: cell(row, 'SmartTags'),
+                productPage: cell(row, 'ProductPage') || cell(row, 'Details'),
+                features: cell(row, 'Features'),
+                requirements: cell(row, 'Requirements'),
+                platform: cell(row, 'Platform'),
             };
-        }).filter(p => p.id !== '' && p.status.toLowerCase() === 'published');
+        }).filter(p => {
+            // Drop header row + drafts + empty IDs
+            const st = (p.status || '').toLowerCase();
+            if (!p.id || p.id.toLowerCase() === 'id') return false;
+            if (st === 'status') return false;
+            return st === 'published';
+        });
 
         allProducts = await Promise.all(productsRaw.map(async (p) => {
             const files = await scanDirectory(p.folderPath);
