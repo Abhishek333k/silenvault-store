@@ -150,6 +150,47 @@ permalink: "item/{{ product.ID }}/index.html"
 
                 </div>
                 {% endif %}
+
+                {# —— Product Page (long-form details under media) ——
+                   Optional Google Sheet columns (any can be empty):
+                   ProductPage | Details | Features | Requirements | Platform
+                   Worth it for SOFTWARE products (GrabbyVault). Optional for wallpaper packs.
+                #}
+                {% set detailsText = product.ProductPage or product.Details or '' %}
+                {% set featuresText = product.Features or '' %}
+                {% set requirementsText = product.Requirements or '' %}
+                {% set platformText = product.Platform or '' %}
+                {% if detailsText or featuresText or requirementsText %}
+                <div class="premium-glass-panel p-6 md:p-8 mt-2 w-full">
+                    <h2 class="text-sm font-bold mono uppercase tracking-[0.2em] text-[#00F0FF] mb-4">Product details</h2>
+                    {% if detailsText %}
+                    <div class="text-slate-300 font-light leading-relaxed text-sm whitespace-pre-line mb-6">{{ detailsText }}</div>
+                    {% endif %}
+                    {% if featuresText %}
+                    <h3 class="text-xs font-bold mono uppercase tracking-widest text-slate-400 mb-2">What's included</h3>
+                    <ul class="list-none space-y-2 mb-6">
+                        {% for line in featuresText.split('\n') %}
+                            {% if line | trim | length > 0 %}
+                            <li class="flex gap-2 text-sm text-slate-300 font-light">
+                                <span class="text-[#00F0FF] shrink-0">▹</span>
+                                <span>{{ line | trim }}</span>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% if requirementsText %}
+                    <h3 class="text-xs font-bold mono uppercase tracking-widest text-slate-400 mb-2">Requirements</h3>
+                    <div class="text-slate-400 font-light text-sm whitespace-pre-line mono">{{ requirementsText }}</div>
+                    {% endif %}
+                    {% if platformText %}
+                    <div class="mt-4 pt-4 border-t border-white/5 flex justify-between text-xs mono text-slate-500">
+                        <span>Platform</span>
+                        <span class="text-slate-300">{{ platformText }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
             </div>
 
             <div class="lg:col-span-4 flex flex-col gap-6 sticky top-24">
@@ -211,7 +252,7 @@ permalink: "item/{{ product.ID }}/index.html"
                     </div>
                     <div class="flex justify-between pt-2">
                         <span>Platform</span>
-                        <span class="text-slate-300">Windows, Mac, Mobile</span>
+                        <span class="text-slate-300">{{ product.Platform or 'Windows, Mac, Mobile' }}</span>
                     </div>
                 </div>
 
